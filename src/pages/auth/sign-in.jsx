@@ -6,7 +6,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import useDocumentHead from "../../hooks/useDocumentHead";
 import { useEffect, useState } from "react";
 import Checkbox from "../../components/Elements/Checkbox";
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+import { apiBaseUrl } from "../../config/api";
 
 const SignIn = () => {
   useDocumentHead({
