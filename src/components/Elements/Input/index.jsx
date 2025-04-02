@@ -1,5 +1,5 @@
 import Input from "./Input";
-import Label from "./label";
+import Label from "./Label";
 
 const InputForm = (props) => {
   const {
@@ -12,6 +12,7 @@ const InputForm = (props) => {
     checked,
     autoComplete,
     required = false,
+    error = null,
   } = props;
   return (
     <div className="mb-2">
@@ -26,7 +27,9 @@ const InputForm = (props) => {
         checked={checked}
         autoComplete={autoComplete}
         required={required}
+        error={error}
       />
+      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
 };

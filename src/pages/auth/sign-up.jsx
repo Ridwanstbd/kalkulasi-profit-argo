@@ -1,17 +1,16 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Button from "../../components/Elements/Button";
-import InputForm from "../../components/Elements/Input";
-import AuthTemplate from "../../components/Fragments/AuthTemplate";
-import { useAuth } from "../../contexts/AuthContext";
-import useDocumentHead from "../../hooks/useDocumentHead";
 import { useEffect, useState } from "react";
-import Checkbox from "../../components/Elements/Checkbox";
+import AuthTemplate from "../../components/Fragments/AuthTemplate";
+import useDocumentHead from "../../hooks/useDocumentHead";
+import InputForm from "../../components/Elements/Input";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 import { apiBaseUrl } from "../../config/api";
+import Button from "../../components/Elements/Button";
 
-const SignIn = () => {
+const SignUp = () => {
   useDocumentHead({
-    title: "Login",
-    description: "Halaman login untuk mengakses Aplikasi",
+    title: "Daftar",
+    description: "Pendaftaran aplikasi Kalkulasi Profit",
   });
 
   const { login, isAuthenticated } = useAuth();
@@ -20,19 +19,21 @@ const SignIn = () => {
   const from = location.state?.from?.pathname || "/dashboard/me";
 
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
-    remember_me: false,
+    password_confirmation: "",
   });
+
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated && loginSuccess) {
+    if (isAuthenticated && signUpSuccess) {
       navigate(from, { replace: true });
     }
-  }, [isAuthenticated, loginSuccess, navigate, from]);
+  }, [isAuthenticated, signUpSuccess, navigate, from]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -40,7 +41,6 @@ const SignIn = () => {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
-
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -53,9 +53,8 @@ const SignIn = () => {
     e.preventDefault();
     setLoading(true);
     setErrors({});
-
     try {
-      const response = await fetch(`${apiBaseUrl}/v1/login`, {
+      const response = await fetch(`${apiBaseUrl}/v1/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,28 +62,31 @@ const SignIn = () => {
         },
         body: JSON.stringify(formData),
       });
-
       const data = await response.json();
 
       if (!response.ok) {
         if (response.status === 400 && data.errors) {
-          setErrors(
-            typeof data.errors === "string"
-              ? JSON.parse(data.errors)
-              : data.errors
-          );
+          setErrors(JSON.parse(data.errors));
           throw new Error("Validasi gagal");
         } else {
-          throw new Error(data.message || "Login Gagal");
+          throw new Error(data.message || "Register Gagal");
         }
       }
-
       if (!data.success) {
-        throw new Error(data.message || "Login Gagal");
+        throw new Error(data.message || "Register Gagal");
       }
 
-      login(data);
-      setLoginSuccess(true);
+      const loginData = {
+        user: data.data.user,
+        authorization: {
+          token: data.data.token,
+          type: "Bearer",
+          expires_in: 60 * 60 * 24,
+        },
+      };
+
+      login(loginData);
+      setSignUpSuccess(true);
       navigate(from, { replace: true });
     } catch (err) {
       if (err.message !== "Validasi gagal") {
@@ -96,9 +98,8 @@ const SignIn = () => {
       setLoading(false);
     }
   };
-
   return (
-    <AuthTemplate title="Masuk" type="login">
+    <AuthTemplate title="Daftar" type="register">
       {errors.general && (
         <div
           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
@@ -107,47 +108,45 @@ const SignIn = () => {
           <span className="block sm:inline">{errors.general}</span>
         </div>
       )}
-      <form className="space-y-4" onSubmit={handleSubmit}>
+      <form className="space-y-2" onSubmit={handleSubmit}>
+        <InputForm
+          label="Nama"
+          name="name"
+          type="text"
+          placeholder="Nama Lengkap"
+          value={formData.name}
+          onChange={handleChange}
+          error={errors.name}
+          required
+        />
         <InputForm
           label="Email"
           name="email"
           type="email"
-          placeholder="email@example.com"
+          placeholder="ridwansetiobudi@gmail.com"
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
           required
         />
-
         <InputForm
-          label="Password"
+          label="Kata Sandi"
           name="password"
           type="password"
-          autoComplete="current-password"
           placeholder="••••••••"
           value={formData.password}
           onChange={handleChange}
           error={errors.password}
           required
         />
-
-        <div className="flex items-center justify-between">
-          <Checkbox
-            name="remember_me"
-            onChange={handleChange}
-            checked={formData.remember_me}
-            label="Ingat Saya"
-          />
-
-          <div className="text-sm">
-            <Link
-              to="/forgot-password"
-              className="font-medium text-blue-600 hover:text-blue-500"
-            >
-              Lupa Kata Sandi?
-            </Link>
-          </div>
-        </div>
+        <InputForm
+          label="Konfirmasi Kata Sandi"
+          name="password_confirmation"
+          type="password"
+          placeholder="••••••••"
+          value={formData.password_confirmation}
+          onChange={handleChange}
+        />
         <Button
           type="submit"
           disabled={loading}
@@ -155,11 +154,10 @@ const SignIn = () => {
             loading ? "opacity-70 cursor-not-allowed" : ""
           }`}
         >
-          {loading ? "Memproses..." : "Masuk"}
+          {loading ? "Memproses..." : "Daftar"}
         </Button>
       </form>
     </AuthTemplate>
   );
 };
-
-export default SignIn;
+export default SignUp;

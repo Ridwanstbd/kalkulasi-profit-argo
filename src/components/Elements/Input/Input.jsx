@@ -1,3 +1,4 @@
+// Input.jsx
 import { useState } from "react";
 
 const Input = (props) => {
@@ -5,6 +6,7 @@ const Input = (props) => {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const {
     type,
     placeholder,
@@ -15,20 +17,29 @@ const Input = (props) => {
     value,
     rows = 4,
     className = "",
+    error = null,
+    ...rest
   } = props;
+
+  const errorClass = error
+    ? "border-red-500 focus:ring-red-500"
+    : "focus:ring-blue-500";
+
   if (type === "textarea") {
     return (
       <textarea
         id={id}
-        className={`text-sm border rounded w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y ${className}`}
+        className={`text-sm border rounded w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-2 focus:border-transparent resize-y ${errorClass} ${className}`}
         placeholder={placeholder}
         name={name}
         rows={rows}
         onChange={onChange}
         value={value}
+        {...rest}
       ></textarea>
     );
   }
+
   if (type === "checkbox") {
     return (
       <input
@@ -38,20 +49,23 @@ const Input = (props) => {
         name={name}
         onChange={onChange}
         checked={checked}
+        {...rest}
       />
     );
   }
+
   if (type === "password") {
     return (
       <div className="relative">
         <input
           type={showPassword ? "text" : "password"}
-          className={`text-sm border rounded w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 ${className}`}
+          className={`text-sm border rounded w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-2 focus:border-transparent pr-10 ${errorClass} ${className}`}
           placeholder={placeholder}
           name={name}
           id={id}
           onChange={onChange}
           value={value}
+          {...rest}
         />
         <button
           type="button"
@@ -97,13 +111,15 @@ const Input = (props) => {
   return (
     <input
       type={type}
-      className="text-sm border rounded w-full py-2 px-3 text-slate-700 placeholder:opacity-80"
+      className={`text-sm border rounded w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-2 ${errorClass} ${className}`}
       placeholder={placeholder}
       name={name}
       id={id}
       onChange={onChange}
       value={value}
+      {...rest}
     />
   );
 };
+
 export default Input;

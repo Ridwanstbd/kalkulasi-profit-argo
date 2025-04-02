@@ -2,8 +2,8 @@ import useDocumentHead from "../hooks/useDocumentHead";
 
 export function Index() {
   useDocumentHead({
-    title: "Kalkulasi Bisnis UMKM",
-    description: "Mudah Profit dengan Kalkulasi bisnis",
+    title: "Kalkulasi Profit",
+    description: "Mudah Profit dengan Kalkulasi profit",
   });
   return (
     <div>

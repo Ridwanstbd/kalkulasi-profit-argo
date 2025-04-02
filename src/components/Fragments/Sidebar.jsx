@@ -9,7 +9,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../Elements/Button";
 import { useEffect } from "react";
 
@@ -68,7 +68,7 @@ const Sidebar = ({ children }) => {
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
       <header className="md:hidden bg-gray-800 text-white p-4 flex justify-between items-center shadow-md">
-        <h2 className="font-bold text-xl">Profiting UMKM</h2>
+        <h2 className="font-bold text-xl">Kalkulasi Profit</h2>
         <button
           onClick={toggleSidebar}
           className="p-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600"
@@ -96,7 +96,7 @@ const Sidebar = ({ children }) => {
           } items-center`}
         >
           {!isCollapsed && (
-            <h2 className="font-bold text-xl">Profiting UMKM</h2>
+            <h2 className="font-bold text-xl">Kalkulasi Profit</h2>
           )}
           <button
             onClick={toggleSidebar}
@@ -157,8 +157,8 @@ const Sidebar = ({ children }) => {
                       )}
                     </div>
                   ) : (
-                    <a
-                      href={item.link}
+                    <Link
+                      to={item.link}
                       className={`flex items-center p-2 rounded-md hover:bg-gray-700 transition-colors ${
                         isCollapsed ? "justify-center" : ""
                       }`}
@@ -170,7 +170,7 @@ const Sidebar = ({ children }) => {
                         </span>
                       )}
                       {!isCollapsed && <span>{item.title}</span>}
-                    </a>
+                    </Link>
                   )}
                 </li>
               ))}
@@ -183,7 +183,7 @@ const Sidebar = ({ children }) => {
             {isCollapsed ? (
               <Button
                 onClick={handleLogout}
-                style="flex justify-center items-center rounded-md hover:bg-red-700 transition-colors text-white bg-red-600 "
+                className="flex justify-center items-center rounded-md hover:bg-red-700 transition-colors text-white bg-red-600 "
                 title="Logout"
               >
                 <LogOut size={18} />
@@ -191,7 +191,7 @@ const Sidebar = ({ children }) => {
             ) : (
               <Button
                 onClick={handleLogout}
-                style="flex items-center p-2 rounded-md hover:bg-red-700 transition-colors text-white bg-red-600 w-full"
+                className="flex items-center p-2 mb-2 rounded-md hover:bg-red-700 transition-colors text-white bg-red-600 w-full"
               >
                 <LogOut size={18} className="mr-3" />
                 <span>Logout</span>

@@ -5,6 +5,7 @@ const Profile = () => {
     title: "Profil Saya",
     description: "Ini adalah bagian dari profil saya",
   });
+
   return (
     <>
       <div className="w-full bg-amber-300">MEEEE</div>

@@ -1,8 +1,7 @@
 import Input from "../Input/Input";
-import Label from "../Input/label";
-
+import Label from "../Input/Label";
 const Checkbox = (props) => {
-  const { name, checked = false, onChange } = props;
+  const { name, checked = false, onChange, label } = props;
   return (
     <div className="flex text-center items-center gap-2">
       <Input
@@ -12,8 +11,8 @@ const Checkbox = (props) => {
         checked={checked}
         onChange={onChange}
       />
-      <Label htmlFor={name} style="mb-0">
-        Ingat Saya
+      <Label htmlFor={name} style="mb-0.5">
+        {label}
       </Label>
     </div>
   );
