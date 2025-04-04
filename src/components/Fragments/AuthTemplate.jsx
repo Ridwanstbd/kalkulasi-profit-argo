@@ -15,24 +15,27 @@ const AuthTemplate = (props) => {
           <h1 className="text-2xl font-bold mb-6">{title}</h1>
           {children}
           <div className="text-sm font-medium mt-1">
-            {type === "login" ? `Belum punya akun?` : `Sudah punya akun?`}
             {type === "login" && (
-              <Link
-                to="/auth/register"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                {" "}
-                Daftar
-              </Link>
+              <>
+                Belum punya akun?{" "}
+                <Link
+                  to="/auth/register"
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
+                  Daftar
+                </Link>
+              </>
             )}
             {type === "register" && (
-              <Link
-                to="/auth/login"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                {" "}
-                Masuk
-              </Link>
+              <>
+                Sudah punya akun?{" "}
+                <Link
+                  to="/auth/login"
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
+                  Masuk
+                </Link>
+              </>
             )}
           </div>
         </div>

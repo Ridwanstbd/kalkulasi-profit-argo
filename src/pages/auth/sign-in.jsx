@@ -7,6 +7,7 @@ import useDocumentHead from "../../hooks/useDocumentHead";
 import { useEffect, useState } from "react";
 import Checkbox from "../../components/Elements/Checkbox";
 import { apiBaseUrl } from "../../config/api";
+import Alert from "../../components/Elements/Alert";
 
 const SignIn = () => {
   useDocumentHead({
@@ -99,14 +100,7 @@ const SignIn = () => {
 
   return (
     <AuthTemplate title="Masuk" type="login">
-      {errors.general && (
-        <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-          role="alert"
-        >
-          <span className="block sm:inline">{errors.general}</span>
-        </div>
-      )}
+      {errors.general && <Alert message={errors.general} />}
       <form className="space-y-4" onSubmit={handleSubmit}>
         <InputForm
           label="Email"
@@ -141,7 +135,7 @@ const SignIn = () => {
 
           <div className="text-sm">
             <Link
-              to="/forgot-password"
+              to="/auth/forgot-password"
               className="font-medium text-blue-600 hover:text-blue-500"
             >
               Lupa Kata Sandi?

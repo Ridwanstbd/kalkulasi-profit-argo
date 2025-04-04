@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { apiBaseUrl } from "../config/api";
 
 const AuthContext = createContext(null);
 
@@ -26,6 +27,7 @@ export const AuthProvider = ({ children }) => {
       }
     };
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -42,12 +44,28 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
   };
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  const logout = async () => {
+    try {
+      if (token) {
+        const response = await fetch(`${apiBaseUrl}/v1/logout`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          console.error("Logout API call failed:", response.statusText);
+        }
+      }
+    } catch (err) {
+      console.error("Error during logout:", err);
+    } finally {
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    }
   };
 
   const hasRole = (role) => {

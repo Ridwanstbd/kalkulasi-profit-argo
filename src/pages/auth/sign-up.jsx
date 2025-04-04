@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { apiBaseUrl } from "../../config/api";
 import Button from "../../components/Elements/Button";
+import Alert from "../../components/Elements/Alert";
 
 const SignUp = () => {
   useDocumentHead({
@@ -100,14 +101,7 @@ const SignUp = () => {
   };
   return (
     <AuthTemplate title="Daftar" type="register">
-      {errors.general && (
-        <div
-          className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
-          role="alert"
-        >
-          <span className="block sm:inline">{errors.general}</span>
-        </div>
-      )}
+      {errors.general && <Alert message={errors.general} />}
       <form className="space-y-2" onSubmit={handleSubmit}>
         <InputForm
           label="Nama"
@@ -146,6 +140,8 @@ const SignUp = () => {
           placeholder="••••••••"
           value={formData.password_confirmation}
           onChange={handleChange}
+          error={errors.password_confirmation}
+          required
         />
         <Button
           type="submit"

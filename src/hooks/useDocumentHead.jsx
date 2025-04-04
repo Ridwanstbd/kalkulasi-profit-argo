@@ -3,7 +3,7 @@ import { useEffect } from "react";
 function useDocumentHead({ title, description, favicon = null }) {
   useEffect(() => {
     const originalTitle = document.title;
-    let originalDescription = null;
+    let originalDescription;
     let originalFavicon = null;
 
     if (title) {

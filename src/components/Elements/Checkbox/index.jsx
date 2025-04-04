@@ -3,7 +3,7 @@ import Label from "../Input/Label";
 const Checkbox = (props) => {
   const { name, checked = false, onChange, label } = props;
   return (
-    <div className="flex text-center items-center gap-2">
+    <div className="flex items-center gap-2">
       <Input
         id={name}
         type="checkbox"
