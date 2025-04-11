@@ -9,13 +9,13 @@ const Alert = ({
   className = "",
   onDismiss,
 }) => {
-  const [visible, setVisible] = useState(true);
-
-  if (!visible) return null;
+  const [isExiting, setIsExiting] = useState(false);
 
   const handleDismiss = () => {
-    setVisible(false);
-    if (onDismiss) onDismiss();
+    setIsExiting(true);
+    setTimeout(() => {
+      if (onDismiss) onDismiss();
+    }, 300);
   };
 
   const configs = {
@@ -54,7 +54,15 @@ const Alert = ({
 
   return (
     <div
-      className={`${bgColor} border ${borderColor} ${textColor} px-4 py-3 rounded relative mb-4 flex items-center ${className}`}
+      className={`
+        ${bgColor} border ${borderColor} ${textColor} px-4 py-3 rounded relative mb-4 flex items-center ${className}
+        transition-all duration-300 ease-in-out
+        ${
+          isExiting
+            ? "opacity-0 transform translate-x-8"
+            : "opacity-100 transform translate-x-0"
+        }
+      `}
       role="alert"
     >
       {icon && <span className="mr-2">{AlertIcon}</span>}
