@@ -7,6 +7,7 @@ import Alert from "../components/Elements/Alert";
 export const AlertContext = createContext();
 const Dashboard = () => {
   const [pageTitle, setPageTitle] = useState("Dashboard");
+  const [pageDescription, setPageDescription] = useState("Dashboard");
   const [alert, setAlert] = useState({
     visible: false,
     message: "",
@@ -32,8 +33,8 @@ const Dashboard = () => {
   };
   return (
     <AlertContext.Provider value={{ showAlert }}>
-      <Sidebar title={pageTitle}>
-        <Outlet context={{ setPageTitle, showAlert }} />
+      <Sidebar title={pageTitle} description={pageDescription}>
+        <Outlet context={{ setPageTitle, setPageDescription, showAlert }} />
         <div className="absolute right-3 top-16 z-50 w-80 overflow-hidden">
           {alert.visible && (
             <div className="transform transition-transform duration-300 ease-out">

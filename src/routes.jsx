@@ -5,6 +5,11 @@ import SignUp from "./pages/auth/sign-up";
 import ForgotPassword from "./pages/auth/forgot-password";
 import Profile from "./pages/dashboard/profile";
 import ResetPassword from "./pages/auth/reset-password";
+import HppCalculate from "./pages/dashboard/hpp-calculate";
+import OperationalExpense from "./pages/dashboard/operational-expense";
+import Pricing from "./pages/dashboard/pricing";
+import SalesRecap from "./pages/dashboard/sales-recap";
+import Product from "./pages/dashboard/product";
 
 const routes = [
   {
@@ -43,6 +48,26 @@ const routes = [
       {
         path: "me",
         element: <Profile />,
+      },
+      {
+        path: "hpp",
+        element: <HppCalculate />,
+      },
+      {
+        path: "operational-expenses",
+        element: <OperationalExpense />,
+      },
+      {
+        path: "pricing",
+        element: <Pricing />,
+      },
+      {
+        path: "sales-recap",
+        element: <SalesRecap />,
+      },
+      {
+        path: "products",
+        element: <Product />,
       },
     ],
   },
