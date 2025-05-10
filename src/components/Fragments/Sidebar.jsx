@@ -18,6 +18,8 @@ import {
   BookMarked,
   Package,
   Clock,
+  CircleDollarSign,
+  Blocks,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
@@ -115,12 +117,17 @@ const Sidebar = ({ title, description, children }) => {
       link: "/dashboard/hpp",
     },
     {
+      title: "Kategori Biaya Tetap",
+      icon: <Blocks />,
+      link: "/dashboard/expense-categories",
+    },
+    {
       title: "Biaya Operasional Tetap",
       icon: <BanknoteArrowDown />,
       link: "/dashboard/operational-expenses",
     },
     {
-      title: "Penentuan Harga Jual",
+      title: "Skema Harga Retail",
       icon: <DollarSign />,
       link: "/dashboard/pricing",
     },
@@ -134,11 +141,16 @@ const Sidebar = ({ title, description, children }) => {
       icon: <Package />,
       link: "/dashboard/products",
     },
+    {
+      title: "Daftar Komponen Biaya",
+      icon: <CircleDollarSign />,
+      link: "/dashboard/cost-components",
+    },
   ];
 
   const adminMenuItems = [
     {
-      title: "Manajemen Paket Langganan",
+      title: "Paket Langganan",
       icon: <Users />,
       link: "/manage-subcription",
     },
@@ -201,7 +213,7 @@ const Sidebar = ({ title, description, children }) => {
 
         <div
           className={`fixed md:sticky top-0 left-0 h-full md:h-screen bg-gray-800 text-white z-30 
-            transition-all duration-300 ease-in-out
+            transition-all duration-300 ease-in-out flex flex-col
             ${isOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full"} 
             md:translate-x-0 ${
               isCollapsed ? "md:w-16" : "md:w-64"
@@ -224,8 +236,17 @@ const Sidebar = ({ title, description, children }) => {
               <X size={20} />
             </button>
           </div>
-          <div className="flex flex-col justify-between h-[calc(100%-64px)]">
-            <nav className="p-4">
+
+          {/* Navigation wrapper with flex and overflow */}
+          <div className="flex flex-col flex-grow overflow-hidden">
+            {/* Scrollable navigation area */}
+            <nav
+              className={`p-4 flex-grow overflow-y-auto ${
+                isCollapsed
+                  ? "overflow-hidden"
+                  : "scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-300"
+              }`}
+            >
               {menuCategories.map(
                 (category, categoryIndex) =>
                   category.items.length > 0 && (
@@ -321,45 +342,56 @@ const Sidebar = ({ title, description, children }) => {
                   )
               )}
             </nav>
+
+            {/* Fixed position toggle button */}
+            <div className="p-2">
+              <button
+                onClick={toggleCollapse}
+                className="hidden md:flex absolute right-4.5 top-4 cursor-pointer"
+              >
+                {isCollapsed ? (
+                  <PanelLeftOpen size={27} />
+                ) : (
+                  <PanelLeftClose size={27} />
+                )}
+              </button>
+            </div>
           </div>
-          <button
-            onClick={toggleCollapse}
-            className="hidden md:flex absolute right-4.5 top-4 cursor-pointer "
-          >
-            {isCollapsed ? (
-              <PanelLeftOpen size={27} />
-            ) : (
-              <PanelLeftClose size={27} />
-            )}
-          </button>
         </div>
 
         <div className="flex-1 flex flex-col">
-          <header className="flex bg-white text-gray-800 py-2.5 px-6 shadow-sm items-center justify-between">
+          <header className="flex flex-col sm:flex-row bg-white text-gray-800 py-1.5 px-3 sm:px-6 shadow-sm items-center justify-between gap-2 sm:gap-0">
             {/* Menampilkan waktu dan hari */}
-            <div className="flex items-center">
-              <p className="font-bold text-lg">
+            <div className="flex items-center w-full max-w-[280px] sm:max-w-none mx-auto sm:mx-0 sm:w-auto justify-center sm:justify-start">
+              <p className="font-bold text-sm sm:text-base md:text-lg truncate">
                 {getDayName()}, {getFormattedDate()} | {getFormattedTime()}
               </p>
             </div>
 
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-center sm:justify-end w-full max-w-[280px] sm:max-w-none mx-auto sm:mx-0 sm:w-auto">
               <Dropdown
                 trigger={
-                  <Button className="flex gap-2 w-full items-center rounded-md ">
-                    <CircleUserRound size={30} />
-                    <span className="text-md">Akun Saya</span>
+                  <Button className="flex gap-1 sm:gap-2 items-center rounded-md p-1 sm:p-2">
+                    <CircleUserRound
+                      size={22}
+                      className="sm:w-6 sm:h-6 md:w-8 md:h-8"
+                    />
+                    <span className="text-xs sm:text-sm md:text-md">
+                      Akun Saya
+                    </span>
                   </Button>
                 }
                 position="bottom-right"
               >
-                <Dropdown.Item icon={<User size={20} />}>Profil</Dropdown.Item>
-                <Dropdown.Item icon={<Settings size={20} />}>
-                  Pengaturan
+                <Dropdown.Item
+                  icon={<User size={18} />}
+                  onClick={() => navigate("/dashboard/me")}
+                >
+                  Profil
                 </Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item
-                  icon={<LogOut size={20} />}
+                  icon={<LogOut size={18} />}
                   onClick={handleLogout}
                 >
                   Logout
@@ -369,7 +401,7 @@ const Sidebar = ({ title, description, children }) => {
           </header>
 
           <main className="flex-1 p-4 md:px-6 w-full overflow-x-hidden">
-            <div className="mb-2">
+            <div className="my-4">
               <h2 className="font-bold text-xl">{title}</h2>
               <h2 className="text-md">{description}</h2>
             </div>

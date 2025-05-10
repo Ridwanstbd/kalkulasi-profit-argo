@@ -1,4 +1,3 @@
-// Input.jsx
 import { useState } from "react";
 
 const Input = (props) => {
@@ -18,24 +17,52 @@ const Input = (props) => {
     rows = 4,
     className = "",
     error = null,
+    disabled,
     ...rest
   } = props;
 
+  // Convert boolean values to strings for HTML attributes
+  const sanitizeProps = () => {
+    const cleanProps = {};
+
+    // Copy all remaining props and ensure boolean values are properly handled
+    Object.keys(rest).forEach((key) => {
+      const propValue = rest[key];
+
+      // Handle boolean attributes correctly
+      if (typeof propValue === "boolean") {
+        if (propValue) {
+          cleanProps[key] = key; // For true values on boolean attributes
+        }
+        // Omit the attribute entirely for false values
+      } else {
+        cleanProps[key] = propValue; // Keep non-boolean values as is
+      }
+    });
+
+    return cleanProps;
+  };
+
+  const sanitizedProps = sanitizeProps();
   const errorClass = error
     ? "border-red-500 focus:ring-red-500"
     : "focus:ring-blue-500";
+
+  // Handle disabled state
+  const disabledClass = disabled ? "bg-gray-100 cursor-not-allowed" : "";
 
   if (type === "textarea") {
     return (
       <textarea
         id={id}
-        className={`text-sm border rounded w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-2 focus:border-transparent resize-y ${errorClass} ${className}`}
+        className={`text-sm  bg-white border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-1 resize-y ${errorClass} ${disabledClass} ${className}`}
         placeholder={placeholder}
         name={name}
         rows={rows}
         onChange={onChange}
         value={value}
-        {...rest}
+        disabled={disabled || undefined}
+        {...sanitizedProps}
       ></textarea>
     );
   }
@@ -45,11 +72,14 @@ const Input = (props) => {
       <input
         id={id}
         type="checkbox"
-        className={`h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 ${className}`}
+        className={`h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 ${className} ${
+          disabled ? "opacity-60" : ""
+        }`}
         name={name}
         onChange={onChange}
         checked={checked}
-        {...rest}
+        disabled={disabled || undefined}
+        {...sanitizedProps}
       />
     );
   }
@@ -59,18 +89,22 @@ const Input = (props) => {
       <div className="relative">
         <input
           type={showPassword ? "text" : "password"}
-          className={`text-sm border rounded w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-2 focus:border-transparent pr-10 ${errorClass} ${className}`}
+          className={`text-sm border  w-full py-2 px-3 text-slate-700 bg-white  border-gray-300 rounded-lg focus:ring-blue-500  placeholder:opacity-80 focus:outline-none focus:ring-1 focus:border-transparent pr-10 ${errorClass} ${disabledClass} ${className}`}
           placeholder={placeholder}
           name={name}
           id={id}
           onChange={onChange}
           value={value}
-          {...rest}
+          disabled={disabled || undefined}
+          {...sanitizedProps}
         />
         <button
           type="button"
-          className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+          className={`absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none ${
+            disabled ? "opacity-60 cursor-not-allowed" : ""
+          }`}
           onClick={togglePasswordVisibility}
+          disabled={disabled || undefined}
         >
           {showPassword ? (
             // Icon mata tertutup (hide password)
@@ -108,16 +142,18 @@ const Input = (props) => {
     );
   }
 
+  // For select and other input types
   return (
     <input
       type={type}
-      className={`text-sm border rounded w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-2 ${errorClass} ${className}`}
+      className={`text-sm border bg-white  border-gray-300  focus:ring-blue-500 focus:border-blue-500 rounded-lg w-full py-2 px-3 text-slate-700 placeholder:opacity-80 focus:outline-none focus:ring-1 ${errorClass} ${disabledClass} ${className}`}
       placeholder={placeholder}
       name={name}
       id={id}
       onChange={onChange}
       value={value}
-      {...rest}
+      disabled={disabled || undefined}
+      {...sanitizedProps}
     />
   );
 };

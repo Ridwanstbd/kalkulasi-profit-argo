@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import useDocumentHead from "../../hooks/useDocumentHead";
+import useDocumentHead from "../../../hooks/useDocumentHead";
 import { useOutletContext } from "react-router-dom";
 
 const Profile = () => {

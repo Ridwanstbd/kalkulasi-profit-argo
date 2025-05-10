@@ -18,7 +18,7 @@ const SignIn = () => {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/dashboard/me";
+  const from = location.state?.from?.pathname || "/dashboard/products";
 
   const [formData, setFormData] = useState({
     email: "",
@@ -145,9 +145,8 @@ const SignIn = () => {
         <Button
           type="submit"
           disabled={loading}
-          className={`bg-blue-600 text-white w-full ${
-            loading ? "opacity-70 cursor-not-allowed" : ""
-          }`}
+          variant="primary"
+          className={`w-full ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
         >
           {loading ? "Memproses..." : "Masuk"}
         </Button>

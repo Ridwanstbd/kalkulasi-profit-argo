@@ -3,13 +3,15 @@ import Index from "./pages";
 import SignIn from "./pages/auth/sign-in";
 import SignUp from "./pages/auth/sign-up";
 import ForgotPassword from "./pages/auth/forgot-password";
-import Profile from "./pages/dashboard/profile";
+import Profile from "./pages/dashboard/Profile/profile";
 import ResetPassword from "./pages/auth/reset-password";
-import HppCalculate from "./pages/dashboard/hpp-calculate";
-import OperationalExpense from "./pages/dashboard/operational-expense";
-import Pricing from "./pages/dashboard/pricing";
-import SalesRecap from "./pages/dashboard/sales-recap";
-import Product from "./pages/dashboard/product";
+import HppCalculate from "./pages/dashboard/HppCalculate/hpp-calculate";
+import OperationalExpense from "./pages/dashboard/OperationalExpense/operational-expense";
+import Pricing from "./pages/dashboard/Pricing/pricing";
+import SalesRecap from "./pages/dashboard/SalesRecap/sales-recap";
+import Product from "./pages/dashboard/Product/product";
+import CostComponent from "./pages/dashboard/CostComponent/cost-component";
+import ExpenseCategory from "./pages/dashboard/ExpenseCategory/expense-category";
 
 const routes = [
   {
@@ -54,6 +56,10 @@ const routes = [
         element: <HppCalculate />,
       },
       {
+        path: "expense-categories",
+        element: <ExpenseCategory />,
+      },
+      {
         path: "operational-expenses",
         element: <OperationalExpense />,
       },
@@ -68,6 +74,10 @@ const routes = [
       {
         path: "products",
         element: <Product />,
+      },
+      {
+        path: "cost-components",
+        element: <CostComponent />,
       },
     ],
   },
