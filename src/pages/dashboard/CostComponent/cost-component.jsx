@@ -59,7 +59,7 @@ const CostComponent = () => {
     const typeMap = {
       direct_material: "Bahan Baku Langsung",
       direct_labor: "Tenaga Kerja Langsung",
-      indirect_labor: "Tenaga Kerja Tidak Langsung",
+      indirect_material: "Bahan Baku Tidak Langsung",
       overhead: "Biaya Overhead",
       other: "Lainnya",
     };

@@ -10,7 +10,6 @@ import Button from "../../../components/Elements/Button";
 import DataTable from "../../../components/Fragments/DataTable";
 import Card from "../../../components/Elements/Card";
 import TableActions from "../../../components/Elements/TableActions";
-import Widget from "../../../components/Elements/Widget/Widget";
 import CreateCategory from "./partials/create";
 import DetailCategoryModal from "./partials/detail";
 import EditCategoryModal from "./partials/edit";
@@ -27,11 +26,6 @@ const ExpenseCategory = () => {
   const { token } = useAuth();
   const { showAlert } = useOutletContext();
   const [data, setData] = useState([]);
-  const [summary, setSummary] = useState({
-    total_salary: 0,
-    total_operational: 0,
-    grand_total: 0,
-  });
 
   const pageInfo = {
     title: "Kategori Biaya Tetap Saya",
@@ -106,7 +100,6 @@ const ExpenseCategory = () => {
         );
 
         setData(response.data.data || []);
-        setSummary(response.data.summary || []);
       } catch (error) {
         showAlert(
           `Gagal memuat data produk: ${
@@ -130,13 +123,6 @@ const ExpenseCategory = () => {
     token,
     showAlert,
   ]);
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(value);
-  };
 
   if (loading) {
     return <Loading />;
@@ -144,24 +130,6 @@ const ExpenseCategory = () => {
   return (
     <>
       <Header>
-        <Widget
-          title="Gaji"
-          count={formatCurrency(summary.total_salary)}
-          status="Jumlah"
-          description="jumlah gaji karyawan"
-        />
-        <Widget
-          title="Biaya Tetap"
-          count={formatCurrency(summary.total_operational)}
-          status="Jumlah"
-          description="jumlah biaya selain gaji"
-        />
-        <Widget
-          title="Total"
-          count={formatCurrency(summary.grand_total)}
-          status="Jumlah"
-          description="jumlah biaya operasional tetap"
-        />
         <Button onClick={() => setIsAddModalOpen(true)} variant="primary">
           Tambah Kategori
         </Button>

@@ -48,6 +48,7 @@ const DetailComponent = ({ isOpen, onClose, id }) => {
   const componentTypeOptions = [
     { value: "", label: "Pilih Bahan Baku" },
     { value: "direct_material", label: "Bahan Baku Langsung" },
+    { value: "indirect_material", label: "Bahan Baku Tidak Langsung" },
     { value: "direct_labor", label: "Tenaga Kerja Langsung" },
     { value: "overhead", label: "Overhead" },
     { value: "packaging", label: "Pengemasan" },

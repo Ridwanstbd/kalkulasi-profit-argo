@@ -11,6 +11,7 @@ const SelectForm = ({
   className = "w-full",
   disabled = false,
   error,
+  helperText = "",
   ...props
 }) => {
   return (
@@ -26,6 +27,7 @@ const SelectForm = ({
         disabled={disabled}
         {...props}
       />
+      {helperText && <p className="my-1 text-sm text-blue-600">{helperText}</p>}
       {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
   );

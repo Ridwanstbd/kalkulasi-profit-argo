@@ -1,9 +1,9 @@
 import Input from "../Input/Input";
 import Label from "../Input/Label";
 const Checkbox = (props) => {
-  const { name, checked = false, onChange, label } = props;
+  const { name, checked = false, onChange, label, className } = props;
   return (
-    <div className="flex items-center gap-2">
+    <div className={`flex items-center gap-2 ${className}`}>
       <Input
         id={name}
         type="checkbox"

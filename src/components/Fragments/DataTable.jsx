@@ -153,7 +153,6 @@ const DataTable = ({
       );
     }
 
-    // Add row number to each row for display
     return paginatedData.map((row, index) => {
       const rowWithNumber = {
         ...row,

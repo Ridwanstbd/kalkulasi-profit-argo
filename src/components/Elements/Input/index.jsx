@@ -39,7 +39,7 @@ const InputForm = (props) => {
         error={error}
         {...rest}
       />
-      {helperText && <p className="mt-1 text-sm text-blue-600">{helperText}</p>}
+      {helperText && <p className="my-1 text-sm text-blue-600">{helperText}</p>}
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );

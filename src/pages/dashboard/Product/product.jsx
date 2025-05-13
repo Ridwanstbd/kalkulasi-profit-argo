@@ -137,12 +137,15 @@ const Product = () => {
       name: "Harga Pokok Produksi",
       sortable: true,
       filterable: true,
+      cell: (row) => `Rp ${parseFloat(row.hpp).toLocaleString("id-ID")}`,
     },
     {
       accessor: "selling_price",
       name: "Harga Retail",
       sortable: true,
       filterable: true,
+      cell: (row) =>
+        `Rp ${parseFloat(row.selling_price).toLocaleString("id-ID")}`,
     },
     {
       key: "button-actions",

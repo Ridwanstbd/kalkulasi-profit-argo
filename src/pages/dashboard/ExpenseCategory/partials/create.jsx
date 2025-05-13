@@ -31,7 +31,7 @@ const CreateCategory = ({ isOpen, onClose }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      showAlert("Produk berhasil disimpan!", "success");
+      showAlert("Kategori berhasil disimpan!", "success");
       onClose();
     } catch (error) {
       if (error.response && error.response.data) {
