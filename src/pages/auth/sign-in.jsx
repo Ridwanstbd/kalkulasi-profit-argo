@@ -11,14 +11,14 @@ import Alert from "../../components/Elements/Alert";
 
 const SignIn = () => {
   useDocumentHead({
-    title: "Login",
-    description: "Halaman login untuk mengakses Aplikasi",
+    title: "Masuk",
+    description: "Halaman Masuk untuk mengakses Aplikasi",
   });
 
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/dashboard/products";
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const [formData, setFormData] = useState({
     email: "",

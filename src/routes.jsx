@@ -1,4 +1,3 @@
-//routes.jsx
 import Index from "./pages";
 import SignIn from "./pages/auth/sign-in";
 import SignUp from "./pages/auth/sign-up";
@@ -12,6 +11,8 @@ import SalesRecap from "./pages/dashboard/SalesRecap/sales-recap";
 import Product from "./pages/dashboard/Product/product";
 import CostComponent from "./pages/dashboard/CostComponent/cost-component";
 import ExpenseCategory from "./pages/dashboard/ExpenseCategory/expense-category";
+import Dashboard from "./pages/dashboard/dashboard";
+import ManageSubscription from "./pages/dashboard/Admin/ManageSubscription";
 
 const routes = [
   {
@@ -48,6 +49,10 @@ const routes = [
     layout: "dashboard",
     pages: [
       {
+        path: "",
+        element: <Dashboard />,
+      },
+      {
         path: "me",
         element: <Profile />,
       },
@@ -78,6 +83,10 @@ const routes = [
       {
         path: "cost-components",
         element: <CostComponent />,
+      },
+      {
+        path: "manage-subscription",
+        element: <ManageSubscription />,
       },
     ],
   },

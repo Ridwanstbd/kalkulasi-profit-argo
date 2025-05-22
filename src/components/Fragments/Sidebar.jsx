@@ -8,16 +8,12 @@ import {
   PanelLeftOpen,
   PanelLeftClose,
   User,
-  Settings,
   CircleUserRound,
   DollarSign,
-  Users,
-  Info,
   BanknoteArrowDown,
   FlaskConical,
   BookMarked,
   Package,
-  Clock,
   CircleDollarSign,
   Blocks,
 } from "lucide-react";
@@ -32,7 +28,7 @@ const Sidebar = ({ title, description, children }) => {
   const [activeMenu, setActiveMenu] = useState(null);
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const auth = useAuth();
-  const { user, logout: authLogout } = auth || {};
+  const { logout: authLogout } = auth || {};
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -109,7 +105,7 @@ const Sidebar = ({ title, description, children }) => {
     {
       title: "Dashboard",
       icon: <Home />,
-      link: "/dashboard/me",
+      link: "/dashboard",
     },
     {
       title: "Kalkulasi HPP",
@@ -117,9 +113,9 @@ const Sidebar = ({ title, description, children }) => {
       link: "/dashboard/hpp",
     },
     {
-      title: "Kategori Biaya Tetap",
-      icon: <Blocks />,
-      link: "/dashboard/expense-categories",
+      title: "Skema Harga Retail",
+      icon: <DollarSign />,
+      link: "/dashboard/pricing",
     },
     {
       title: "Biaya Operasional Tetap",
@@ -127,19 +123,21 @@ const Sidebar = ({ title, description, children }) => {
       link: "/dashboard/operational-expenses",
     },
     {
-      title: "Skema Harga Retail",
-      icon: <DollarSign />,
-      link: "/dashboard/pricing",
-    },
-    {
       title: "Rekap Penjualan",
       icon: <BookMarked />,
       link: "/dashboard/sales-recap",
     },
+  ];
+  const masterDataMenuItems = [
     {
       title: "Daftar Produk",
       icon: <Package />,
       link: "/dashboard/products",
+    },
+    {
+      title: "Kategori Biaya Tetap",
+      icon: <Blocks />,
+      link: "/dashboard/expense-categories",
     },
     {
       title: "Daftar Komponen Biaya",
@@ -148,29 +146,14 @@ const Sidebar = ({ title, description, children }) => {
     },
   ];
 
-  const adminMenuItems = [
-    {
-      title: "Paket Langganan",
-      icon: <Users />,
-      link: "/manage-subcription",
-    },
-  ];
-  const userMenuItems = [
-    {
-      title: "Status Langganan",
-      icon: <Info />,
-      link: "/dashboard/me",
-    },
-  ];
-
   const menuCategories = [
+    {
+      category: "Master Data",
+      items: masterDataMenuItems,
+    },
     {
       category: "Fitur Utama",
       items: commonMenuItems,
-    },
-    {
-      category: "Administrasi Sistem",
-      items: user?.is_admin ? adminMenuItems : userMenuItems,
     },
   ];
 
@@ -237,9 +220,7 @@ const Sidebar = ({ title, description, children }) => {
             </button>
           </div>
 
-          {/* Navigation wrapper with flex and overflow */}
           <div className="flex flex-col flex-grow overflow-hidden">
-            {/* Scrollable navigation area */}
             <nav
               className={`p-4 flex-grow overflow-y-auto ${
                 isCollapsed
@@ -261,7 +242,6 @@ const Sidebar = ({ title, description, children }) => {
                         <div className="border-t border-gray-700 my-4"></div>
                       )}
 
-                      {/* Menu Items */}
                       <ul className="space-y-2">
                         {category.items.map((item, index) => (
                           <li key={index} className="relative">
@@ -343,7 +323,6 @@ const Sidebar = ({ title, description, children }) => {
               )}
             </nav>
 
-            {/* Fixed position toggle button */}
             <div className="p-2">
               <button
                 onClick={toggleCollapse}
@@ -394,7 +373,7 @@ const Sidebar = ({ title, description, children }) => {
                   icon={<LogOut size={18} />}
                   onClick={handleLogout}
                 >
-                  Logout
+                  Keluar
                 </Dropdown.Item>
               </Dropdown>
             </div>
