@@ -198,6 +198,8 @@ const Service = () => {
           status="Rata-rata"
           description="harga pokok Layanan"
         />
+      </Header>
+      <Header>
         <Widget
           title="Harga Pokok Layanan"
           count={formatCurrency(stats.total_hpp_value)}

@@ -344,7 +344,7 @@ const Sidebar = ({ title, description, children }) => {
                                     isCollapsed ? "justify-center" : ""
                                   } ${
                                     isActive
-                                      ? "bg-blue-600 text-white font-medium shadow-md border-l-4 border-blue-300"
+                                      ? "bg-blue-600 text-white font-medium shadow-md"
                                       : "text-gray-300 hover:text-white hover:bg-gray-700"
                                   }`}
                                   title={isCollapsed ? item.title : ""}

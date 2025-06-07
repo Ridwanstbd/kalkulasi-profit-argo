@@ -11,7 +11,6 @@ import Service from "./pages/dashboard/Product/service";
 import CostComponent from "./pages/dashboard/CostComponent/cost-component";
 import ExpenseCategory from "./pages/dashboard/ExpenseCategory/expense-category";
 import Dashboard from "./pages/dashboard/dashboard";
-import ManageSubscription from "./pages/dashboard/Admin/ManageSubscription";
 
 const routes = [
   {
@@ -78,10 +77,6 @@ const routes = [
       {
         path: "cost-components",
         element: <CostComponent />,
-      },
-      {
-        path: "manage-subscription",
-        element: <ManageSubscription />,
       },
     ],
   },
