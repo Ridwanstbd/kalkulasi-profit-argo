@@ -11,7 +11,7 @@ import ModalForm from "../../../../components/Fragments/ModalForm";
 const EditServiceModal = ({
   isOpen,
   onClose,
-  Service_id,
+  service_id,
   onServiceUpdated,
 }) => {
   const { showAlert } = useOutletContext();
@@ -30,11 +30,11 @@ const EditServiceModal = ({
 
   useEffect(() => {
     const fetchService = async () => {
-      if (!Service_id) return;
+      if (!service_id) return;
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/api/services/${Service_id}`,
+          `${apiBaseUrl}/api/services/${service_id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -61,10 +61,10 @@ const EditServiceModal = ({
       }
     };
 
-    if (isOpen && token && Service_id) {
+    if (isOpen && token && service_id) {
       fetchService();
     }
-  }, [token, Service_id, isOpen, user?.id, showAlert]);
+  }, [token, service_id, isOpen, user?.id, showAlert]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -107,7 +107,7 @@ const EditServiceModal = ({
 
     try {
       const response = await axios.put(
-        `${apiBaseUrl}/api/Services/${Service_id}`,
+        `${apiBaseUrl}/api/Services/${service_id}`,
         formData,
         {
           headers: {

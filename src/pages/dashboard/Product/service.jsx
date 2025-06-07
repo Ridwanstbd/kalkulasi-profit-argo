@@ -140,8 +140,13 @@ const Service = () => {
       name: "Harga Retail",
       sortable: true,
       filterable: true,
-      cell: (row) =>
-        `Rp ${parseFloat(row.selling_price).toLocaleString("id-ID")}`,
+      cell: (row) => {
+        return (
+          <div className="text-right font-medium">
+            {formatCurrency(row.selling_price)}
+          </div>
+        );
+      },
     },
     {
       key: "button-actions",
@@ -210,6 +215,7 @@ const Service = () => {
           <Button
             onClick={() => setIsAddModalOpen(true)}
             variant="primary"
+            className="w-full"
             id="create"
           >
             Tambah Layanan
@@ -231,17 +237,17 @@ const Service = () => {
         <DetailServiceModal
           isOpen={isDetailModalOpen}
           onClose={() => setIsDetailModalOpen(false)}
-          Service_id={selectedServiceId}
+          service_id={selectedServiceId}
         />
         <EditServiceModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          Service_id={selectedServiceId}
+          service_id={selectedServiceId}
         />
         <DeleteServiceModal
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
-          Service_id={selectedServiceId}
+          service_id={selectedServiceId}
           onServiceDeleted={handleServiceDeleted}
         />
       </Card>

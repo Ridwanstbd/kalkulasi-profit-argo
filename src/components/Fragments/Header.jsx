@@ -1,10 +1,7 @@
-const Header = (props) => {
-  const { children } = props;
+const Header = ({ children }) => (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4 p-2 w-full overflow-x-auto">
+    {children}
+  </div>
+);
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
-      {children}
-    </div>
-  );
-};
 export default Header;
