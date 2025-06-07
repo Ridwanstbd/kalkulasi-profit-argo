@@ -72,7 +72,7 @@ const routes = [
         element: <SalesRecap />,
       },
       {
-        path: "products",
+        path: "services",
         element: <Service />,
       },
       {
