@@ -14,6 +14,7 @@ import DetailServiceModal from "./partials/detail";
 import EditServiceModal from "./partials/edit";
 import DeleteServiceModal from "./partials/delete";
 import Header from "../../../components/Fragments/Header";
+import Button from "../../../components/Elements/Button";
 
 const Service = () => {
   const { setPageTitle, setPageDescription } = useOutletContext();
