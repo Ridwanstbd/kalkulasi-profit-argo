@@ -15,6 +15,7 @@ import EditServiceModal from "./partials/edit";
 import DeleteServiceModal from "./partials/delete";
 import Header from "../../../components/Fragments/Header";
 import Button from "../../../components/Elements/Button";
+import Label from "../../../components/Elements/Input/Label";
 
 const Service = () => {
   const { setPageTitle, setPageDescription } = useOutletContext();
@@ -204,9 +205,16 @@ const Service = () => {
           status="Total"
           description="margin Layanan"
         />
-        <Button onClick={() => setIsAddModalOpen(true)} variant="primary">
-          Tambah Layanan
-        </Button>
+        <div>
+          <Label htmlFor="create">Aksi</Label>
+          <Button
+            onClick={() => setIsAddModalOpen(true)}
+            variant="primary"
+            id="create"
+          >
+            Tambah Layanan
+          </Button>
+        </div>
         <CreateServiceModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
