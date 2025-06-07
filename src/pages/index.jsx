@@ -1,18 +1,10 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import useDocumentHead from "../hooks/useDocumentHead";
 
 export function Index() {
-  const navigate = useNavigate();
-
   useDocumentHead({
     title: "Kalkulasi Profit",
     description: "Mudah Profit dengan Kalkulasi profit",
   });
-
-  useEffect(() => {
-    navigate("/auth/login", { replace: true });
-  }, [navigate]);
 
   return (
     <>

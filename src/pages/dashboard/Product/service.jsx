@@ -203,13 +203,9 @@ const Service = () => {
           status="Total"
           description="margin Layanan"
         />
-        <Widget
-          showActionCard={true}
-          actionButtonText="Tambah Layanan"
-          actionDescription="Buat Layanan Baru"
-          onAction={() => setIsAddModalOpen(true)}
-          imageUrl="../../../../public/img/illustrations/create-illustration.jpg"
-        />
+        <Button onClick={() => setIsAddModalOpen(true)} variant="primary">
+          Tambah Layanan
+        </Button>
         <CreateServiceModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
