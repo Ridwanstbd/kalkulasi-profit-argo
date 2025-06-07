@@ -25,7 +25,7 @@ const CreateComponent = ({ isOpen, onClose }) => {
         throw new Error("Anda belum login, silakan login terlebih dahulu");
       }
       const dataToSubmit = { ...formData, user_id: user.id };
-      await axios.post(`${apiBaseUrl}/v1/cost-components`, dataToSubmit, {
+      await axios.post(`${apiBaseUrl}/api/cost-components`, dataToSubmit, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

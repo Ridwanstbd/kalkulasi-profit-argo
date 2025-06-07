@@ -10,7 +10,12 @@ import SelectForm from "../../../../components/Elements/Select";
 import Button from "../../../../components/Elements/Button";
 import Card from "../../../../components/Elements/Card";
 
-const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
+const CreateServiceCostModal = ({
+  isOpen,
+  onClose,
+  service_id,
+  service_name,
+}) => {
   const { showAlert } = useOutletContext();
   const { token } = useAuth();
   const [costComponentLoading, setCostComponentLoading] = useState(false);
@@ -41,7 +46,7 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
     }));
 
     return {
-      product_id: Number(product_id),
+      service_id: Number(service_id),
       costs: costs,
     };
   };
@@ -74,7 +79,7 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
 
       const dataToSubmit = preparePayload();
 
-      await axios.post(`${apiBaseUrl}/v1/hpp`, dataToSubmit, {
+      await axios.post(`${apiBaseUrl}/api/service-cost`, dataToSubmit, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -90,7 +95,7 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
         }
         showAlert(
           `Error: ${
-            error.response.data.message || "Gagal menyimpan biaya produksi"
+            error.response.data.message || "Gagal menyimpan biaya Layanan"
           }`,
           "error"
         );
@@ -105,7 +110,7 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
       try {
         setCostComponentLoading(true);
 
-        const response = await axios.get(`${apiBaseUrl}/v1/cost-components`, {
+        const response = await axios.get(`${apiBaseUrl}/api/cost-components`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = response.data.data;
@@ -193,12 +198,14 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
     { value: "pcs", label: "pcs" },
     { value: "set", label: "set" },
     { value: "ml", label: "ml" },
+    { value: "gram", label: "gram" },
+    { value: "kg", label: "kg" },
   ];
 
   return (
     <ModalForm
       id="modal-create-hpp"
-      title={`Tambah Biaya Produksi: ${product_name || "Produk"}`}
+      title={`Tambah Biaya Layanan: ${service_name || "Layanan"}`}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleCreateHPP}
@@ -228,10 +235,10 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
           </div>
           <div className="ml-3">
             <p className="text-sm text-blue-800">
-              Mengatur HPP untuk:{" "}
+              Mengatur Biaya Layanan untuk:{" "}
               <span className="font-bold">
-                {product_name || `Produk ID: ${product_id}`} dalam sekali
-                masak/produksi
+                {service_name || `Layanan ID: ${service_id}`} dalam sekali
+                masak/proses
               </span>
             </p>
           </div>
@@ -266,19 +273,6 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
             required
           />
 
-          <SelectForm
-            label="Satuan Kebutuhan"
-            ariaLabel="Unit"
-            name="unit"
-            type="text"
-            value={component.unit}
-            options={unitOptions}
-            onChange={(e) => handleComponentChange(index, e)}
-            error={errors.unit}
-            disabled={false}
-            helperText="Satuan kebutuhan untuk 1 produk jadi"
-          />
-
           <InputForm
             label="Harga (Beli)"
             name="unit_price"
@@ -290,16 +284,17 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
             required
           />
 
-          <InputForm
-            label="Kuantitas Kebutuhan"
-            name="quantity"
-            type="number"
-            placeholder="1"
-            value={component.quantity}
+          <SelectForm
+            label="Satuan Kebutuhan"
+            ariaLabel="Unit"
+            name="unit"
+            type="text"
+            value={component.unit}
+            options={unitOptions}
             onChange={(e) => handleComponentChange(index, e)}
-            error={errors.quantity}
-            helperText="Kuantitas kebutuhan untuk 1 produk jadi"
-            required
+            error={errors.unit}
+            disabled={false}
+            helperText="Satuan kebutuhan untuk 1 Layanan jadi"
           />
 
           <InputForm
@@ -311,6 +306,18 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
             onChange={(e) => handleComponentChange(index, e)}
             error={errors.conversion_qty}
             helperText="Jumlah beli barang yang dikonversi dalam satuan beli"
+            required
+          />
+
+          <InputForm
+            label="Kuantitas Kebutuhan"
+            name="quantity"
+            type="number"
+            placeholder="1"
+            value={component.quantity}
+            onChange={(e) => handleComponentChange(index, e)}
+            error={errors.quantity}
+            helperText="Kuantitas kebutuhan untuk 1 Layanan jadi"
             required
           />
         </Card>
@@ -330,4 +337,4 @@ const CreateHPPModal = ({ isOpen, onClose, product_id, product_name }) => {
   );
 };
 
-export default CreateHPPModal;
+export default CreateServiceCostModal;

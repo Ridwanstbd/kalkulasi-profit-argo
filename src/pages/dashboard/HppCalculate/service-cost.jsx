@@ -11,19 +11,19 @@ import Loading from "../../../components/Elements/Loading";
 import Label from "../../../components/Elements/Input/Label";
 import Button from "../../../components/Elements/Button";
 import Select2Form from "../../../components/Elements/Select2";
-import CreateHPPModal from "./partials/create";
+import CreateServiceCostModal from "./partials/create";
 import TableActions from "../../../components/Elements/TableActions";
-import DetailHPPModal from "./partials/detail";
-import EditHPPModal from "./partials/edit";
-import DeleteHPPModal from "./partials/delete";
+import DetailServiceCostModal from "./partials/detail";
+import EditServiceCostModal from "./partials/edit";
+import DeleteServiceCostModal from "./partials/delete";
 
-const HppCalculate = () => {
+const ServiceCost = () => {
   const { setPageTitle, setPageDescription } = useOutletContext();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(false);
   const { token } = useAuth();
@@ -31,14 +31,14 @@ const HppCalculate = () => {
   const [data, setData] = useState([]);
 
   const [options, setOptions] = useState({
-    product: [],
+    service: [],
   });
-  const [productHPP, setProductHPP] = useState("-");
+  const [serviceHPP, setserviceHPP] = useState("-");
 
   const pageInfo = {
-    title: "Harga Pokok Produk Saya",
+    title: "Harga Pokok Layanan Saya",
     description:
-      "Halaman ini untuk mengelola harga pokok produk yang kamu butuhkan, mulai dari membuat mengubah dan menghapus",
+      "Halaman ini untuk mengelola harga pokok Layanan yang kamu butuhkan, mulai dari membuat mengubah dan menghapus",
   };
   useDocumentHead(pageInfo);
   const handleDetail = (row) => {
@@ -61,17 +61,17 @@ const HppCalculate = () => {
     showAlert("HPP berhasil dihapus", "success");
   };
 
-  const handleProductChange = async (selectedOptions) => {
-    const newSelectedProduct =
+  const handleserviceChange = async (selectedOptions) => {
+    const newSelectedService =
       selectedOptions && selectedOptions.length > 0 ? selectedOptions[0] : null;
 
-    setSelectedProduct(newSelectedProduct);
+    setSelectedService(newSelectedService);
 
-    if (newSelectedProduct) {
+    if (newSelectedService) {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/hpp?product_id=${newSelectedProduct.value}`,
+          `${apiBaseUrl}/api/service-cost?service_id=${newSelectedService.value}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -82,14 +82,14 @@ const HppCalculate = () => {
         const processedData = (response.data.data || []).map((item) => ({
           ...item,
           cost_component_name: item.cost_component?.name || "-",
-          product_name: item.product?.name || "-",
-          product_sku: item.product?.sku || "-",
+          service_name: item.service?.name || "-",
+          service_sku: item.service?.sku || "-",
         }));
 
         setData(processedData);
 
-        const productResponse = await axios.get(
-          `${apiBaseUrl}/v1/products/${newSelectedProduct.value}`,
+        const serviceResponse = await axios.get(
+          `${apiBaseUrl}/api/services/${newSelectedService.value}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -97,27 +97,27 @@ const HppCalculate = () => {
           }
         );
 
-        if (productResponse.data?.data) {
-          setProductHPP(productResponse.data.data.hpp || "-");
+        if (serviceResponse.data?.data) {
+          setserviceHPP(serviceResponse.data.data.hpp || "-");
         } else {
-          setProductHPP("-");
+          setserviceHPP("-");
         }
       } catch (error) {
-        console.error("Error fetching product HPP:", error);
+        console.error("Error fetching service HPP:", error);
         showAlert("Gagal memuat ulang data produk", "error");
-        setProductHPP("-");
+        setserviceHPP("-");
       } finally {
         setLoading(false);
       }
     } else {
       setData(data);
-      setProductHPP("-");
+      setserviceHPP("-");
     }
   };
 
   const handleOpenModal = () => {
-    if (!selectedProduct) {
-      showAlert("Silakan pilih produk terlebih dahulu", "warning");
+    if (!selectedService) {
+      showAlert("Silakan pilih Layanan terlebih dahulu", "warning");
       return;
     }
     setIsAddModalOpen(true);
@@ -126,10 +126,10 @@ const HppCalculate = () => {
   useEffect(() => {
     setPageTitle(pageInfo.title);
     setPageDescription(pageInfo.description);
-    const fetchProducts = async () => {
+    const fetchServices = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${apiBaseUrl}/v1/hpp`, {
+        const response = await axios.get(`${apiBaseUrl}/api/service-cost`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -138,39 +138,39 @@ const HppCalculate = () => {
         const processedData = (response.data.data || []).map((item) => ({
           ...item,
           cost_component_name: item.cost_component?.name || "-",
-          product_name: item.product?.name || "-",
-          product_sku: item.product?.sku || "-",
+          service_name: item.service?.name || "-",
+          service_sku: item.service?.sku || "-",
         }));
         setData(processedData);
 
         if (
-          response.data.all_products &&
-          Array.isArray(response.data.all_products)
+          response.data.all_services &&
+          Array.isArray(response.data.all_services)
         ) {
-          const productOptions = response.data.all_products.map((product) => ({
-            value: product.id,
-            label: `${product.name} (${product.sku})`,
+          const serviceOptions = response.data.all_services.map((service) => ({
+            value: service.id,
+            label: `${service.name} (${service.sku})`,
           }));
 
           setOptions((prev) => ({
             ...prev,
-            product: productOptions,
+            service: serviceOptions,
           }));
 
-          if (productOptions.length > 0 && response.data.product) {
-            const defaultProduct = {
-              value: response.data.product.id,
-              label: `${response.data.product.name} (${response.data.product.sku})`,
+          if (serviceOptions.length > 0 && response.data.service) {
+            const defaultservice = {
+              value: response.data.service.id,
+              label: `${response.data.service.name} (${response.data.service.sku})`,
             };
-            setSelectedProduct(defaultProduct);
+            setSelectedService(defaultservice);
 
             const filteredData = processedData.filter(
-              (item) => item.product_id === defaultProduct.value
+              (item) => item.service_id === defaultservice.value
             );
             setData(filteredData);
 
-            if (response.data.product.hpp) {
-              setProductHPP(response.data.product.hpp);
+            if (response.data.service.hpp) {
+              setserviceHPP(response.data.service.hpp);
             }
           }
         }
@@ -187,7 +187,7 @@ const HppCalculate = () => {
     };
 
     if (token) {
-      fetchProducts();
+      fetchServices();
     }
   }, [
     setPageTitle,
@@ -259,17 +259,17 @@ const HppCalculate = () => {
       <Header>
         <Select2Form
           label="Produk"
-          name="product_id"
-          value={selectedProduct ? [selectedProduct] : []}
-          onChange={handleProductChange}
-          options={options.product}
+          name="service_id"
+          value={selectedService ? [selectedService] : []}
+          onChange={handleserviceChange}
+          options={options.service}
           placeholder="Pilih produk"
         />
         <div>
           <Label htmlFor="hpp">HPP</Label>
           <h3 className="font-bold text-xl">
-            {productHPP !== "-"
-              ? `Rp ${parseFloat(productHPP).toLocaleString("id-ID")}`
+            {serviceHPP !== "-"
+              ? `Rp ${parseFloat(serviceHPP).toLocaleString("id-ID")}`
               : "-"}
           </h3>
         </div>
@@ -282,12 +282,12 @@ const HppCalculate = () => {
           >
             Tambah Biaya Produksi
           </Button>
-          {isAddModalOpen && selectedProduct && (
-            <CreateHPPModal
+          {isAddModalOpen && selectedService && (
+            <CreateServiceCostModal
               isOpen={isAddModalOpen}
               onClose={() => setIsAddModalOpen(false)}
-              product_id={selectedProduct.value}
-              product_name={selectedProduct.label}
+              service_id={selectedService.value}
+              service_name={selectedService.label}
             />
           )}
         </div>
@@ -299,24 +299,24 @@ const HppCalculate = () => {
           pagination={true}
           filterable={true}
         />
-        <DetailHPPModal
+        <DetailServiceCostModal
           isOpen={isDetailModalOpen}
           onClose={() => setIsDetailModalOpen(false)}
-          product_cost_id={selectedId}
+          service_cost_id={selectedId}
         />
-        <EditHPPModal
+        <EditServiceCostModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          product_cost_id={selectedId}
+          service_cost_id={selectedId}
         />
-        <DeleteHPPModal
+        <DeleteServiceCostModal
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
-          product_cost_id={selectedId}
+          service_cost_id={selectedId}
           onDeleted={handleDeleted}
         />
       </Card>
     </>
   );
 };
-export default HppCalculate;
+export default ServiceCost;

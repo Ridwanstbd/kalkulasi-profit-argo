@@ -8,11 +8,11 @@ import InputForm from "../../../../components/Elements/Input";
 import { useOutletContext } from "react-router-dom";
 import ModalForm from "../../../../components/Fragments/ModalForm";
 
-const EditProductModal = ({
+const EditServiceModal = ({
   isOpen,
   onClose,
-  product_id,
-  onProductUpdated,
+  Service_id,
+  onServiceUpdated,
 }) => {
   const { showAlert } = useOutletContext();
   const { user, token } = useAuth();
@@ -29,12 +29,12 @@ const EditProductModal = ({
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      if (!product_id) return;
+    const fetchService = async () => {
+      if (!Service_id) return;
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/products/${product_id}`,
+          `${apiBaseUrl}/api/services/${Service_id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -43,29 +43,28 @@ const EditProductModal = ({
           }
         );
         if (response.data && response.data.data) {
-          const productData = response.data.data;
-          // Initialize form data with the product data
+          const serviceData = response.data.data;
           setFormData({
             user_id: user?.id,
-            name: productData.name || "",
-            sku: productData.sku || "",
-            description: productData.description || "",
-            hpp: productData.hpp || "",
-            selling_price: productData.selling_price || "",
+            name: serviceData.name || "",
+            sku: serviceData.sku || "",
+            description: serviceData.description || "",
+            hpp: serviceData.hpp || "",
+            selling_price: serviceData.selling_price || "",
           });
         }
       } catch (error) {
-        console.error("Error fetching product details:", error);
-        showAlert("Gagal mengambil data produk", "error");
+        console.error("Error fetching Service details:", error);
+        showAlert("Gagal mengambil data Layanan", "error");
       } finally {
         setLoading(false);
       }
     };
 
-    if (isOpen && token && product_id) {
-      fetchProduct();
+    if (isOpen && token && Service_id) {
+      fetchService();
     }
-  }, [token, product_id, isOpen, user?.id, showAlert]);
+  }, [token, Service_id, isOpen, user?.id, showAlert]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -86,11 +85,11 @@ const EditProductModal = ({
     const newErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Nama produk tidak boleh kosong";
+      newErrors.name = "Nama Layanan tidak boleh kosong";
     }
 
     if (!formData.sku.trim()) {
-      newErrors.sku = "SKU produk tidak boleh kosong";
+      newErrors.sku = "SKU Layanan tidak boleh kosong";
     }
 
     setErrors(newErrors);
@@ -108,7 +107,7 @@ const EditProductModal = ({
 
     try {
       const response = await axios.put(
-        `${apiBaseUrl}/v1/products/${product_id}`,
+        `${apiBaseUrl}/api/Services/${Service_id}`,
         formData,
         {
           headers: {
@@ -119,19 +118,19 @@ const EditProductModal = ({
       );
 
       if (response.data && response.data.success) {
-        showAlert("Produk berhasil diperbarui", "success");
-        if (typeof onProductUpdated === "function") {
-          onProductUpdated();
+        showAlert("Layanan berhasil diperbarui", "success");
+        if (typeof onServiceUpdated === "function") {
+          onServiceUpdated();
         }
         onClose();
       } else {
         showAlert(
-          response.data?.message || "Gagal memperbarui produk",
+          response.data?.message || "Gagal memperbarui Layanan",
           "error"
         );
       }
     } catch (error) {
-      console.error("Error updating product:", error);
+      console.error("Error updating Service:", error);
 
       if (error.response && error.response.data && error.response.data.errors) {
         // Handle validation errors from the backend
@@ -142,7 +141,7 @@ const EditProductModal = ({
         setErrors(backendErrors);
       } else {
         showAlert(
-          error.response?.data?.message || "Gagal memperbarui produk",
+          error.response?.data?.message || "Gagal memperbarui Layanan",
           "error"
         );
       }
@@ -153,10 +152,10 @@ const EditProductModal = ({
 
   return (
     <ModalForm
-      id="modal-edit-product"
+      id="modal-edit-Service"
       isOpen={isOpen}
       onClose={onClose}
-      title="Edit Produk"
+      title="Edit Layanan"
       size="large"
       onSubmit={handleSubmit}
       submitting={submitting}
@@ -166,27 +165,27 @@ const EditProductModal = ({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputForm
-            label="Nama Produk"
+            label="Nama Layanan"
             name="name"
             type="text"
-            placeholder="Masukkan nama produk"
+            placeholder="Masukkan nama Layanan"
             value={formData.name}
             onChange={handleChange}
             error={errors.name}
             required
           />
           <InputForm
-            label="Stock Keeping Unit Produk"
+            label="Kode Layanan"
             name="sku"
             type="text"
-            placeholder="Masukkan SKU produk"
+            placeholder="Masukkan Kode Layanan"
             value={formData.sku}
             onChange={handleChange}
             error={errors.sku}
             required
           />
           <InputForm
-            label="Harga Pokok Produk"
+            label="Harga Pokok Layanan"
             name="hpp"
             type="number"
             placeholder="0"
@@ -197,7 +196,7 @@ const EditProductModal = ({
             helperText="HPP dihitung otomatis pada Menu Kalkulasi HPP"
           />
           <InputForm
-            label="Harga Jual Produk"
+            label="Harga Jual Layanan"
             name="selling_price"
             type="number"
             placeholder="0"
@@ -209,10 +208,10 @@ const EditProductModal = ({
           />
           <div className="md:col-span-2">
             <InputForm
-              label="Deskripsi Produk"
+              label="Deskripsi Layanan"
               name="description"
               type="textarea"
-              placeholder="Tuliskan deskripsi produk disini..."
+              placeholder="Tuliskan deskripsi Layanan disini..."
               value={formData.description}
               onChange={handleChange}
               error={errors.description}
@@ -224,4 +223,4 @@ const EditProductModal = ({
   );
 };
 
-export default EditProductModal;
+export default EditServiceModal;

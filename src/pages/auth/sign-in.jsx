@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../../components/Elements/Button";
 import InputForm from "../../components/Elements/Input";
 import AuthTemplate from "../../components/Fragments/AuthTemplate";
@@ -17,8 +17,7 @@ const SignIn = () => {
 
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/dashboard";
+  const from = "/dashboard";
 
   const [formData, setFormData] = useState({
     email: "",
@@ -41,11 +40,17 @@ const SignIn = () => {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
-
     if (errors[name]) {
       setErrors({
         ...errors,
         [name]: null,
+      });
+    }
+
+    if (errors.general) {
+      setErrors({
+        ...errors,
+        general: null,
       });
     }
   };
@@ -54,9 +59,10 @@ const SignIn = () => {
     e.preventDefault();
     setLoading(true);
     setErrors({});
+    setLoginSuccess(false);
 
     try {
-      const response = await fetch(`${apiBaseUrl}/v1/login`, {
+      const response = await fetch(`${apiBaseUrl}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,15 +90,16 @@ const SignIn = () => {
         throw new Error(data.message || "Login Gagal");
       }
 
-      login(data);
+      await login(data);
       setLoginSuccess(true);
-      navigate(from, { replace: true });
     } catch (err) {
+      console.log("Login error:", err.message);
       if (err.message !== "Validasi gagal") {
         setErrors({
           general: err.message || "Terjadi Kesalahan. Silakan coba lagi",
         });
       }
+      setLoginSuccess(false);
     } finally {
       setLoading(false);
     }
@@ -110,6 +117,7 @@ const SignIn = () => {
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
+          color="text-white"
           required
         />
 
@@ -122,6 +130,7 @@ const SignIn = () => {
           value={formData.password}
           onChange={handleChange}
           error={errors.password}
+          color="text-white"
           required
         />
 
@@ -131,12 +140,13 @@ const SignIn = () => {
             onChange={handleChange}
             checked={formData.remember_me}
             label="Ingat Saya"
+            color="text-white"
           />
 
           <div className="text-sm">
             <Link
               to="/auth/forgot-password"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-white hover:text-blue-500"
             >
               Lupa Kata Sandi?
             </Link>

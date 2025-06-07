@@ -23,7 +23,7 @@ const Pricing = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedservice, setSelectedservice] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [loading, setLoading] = useState(false);
   const { token } = useAuth();
@@ -31,14 +31,14 @@ const Pricing = () => {
   const [data, setData] = useState([]);
 
   const [options, setOptions] = useState({
-    product: [],
+    service: [],
   });
-  const [productHPP, setProductHPP] = useState("-");
+  const [serviceCost, setServiceCost] = useState("-");
 
   const pageInfo = {
     title: "Skema Harga Saya",
     description:
-      "Halaman ini untuk mengelola Skema Harga yang kamu butuhkan untuk membagi Margin Produk kamu ke distributor, reseller sampai affiliator. kamu bisa mulai dari membuat skema mengubah dan menghapus",
+      "Halaman ini untuk mengelola Skema Harga yang kamu butuhkan untuk membagi Margin Layanan kamu ke Produsen, sampai affiliator. kamu bisa mulai dari membuat skema mengubah dan menghapus",
   };
   useDocumentHead(pageInfo);
 
@@ -62,17 +62,17 @@ const Pricing = () => {
     showAlert("Skema berhasil dihapus", "success");
   };
 
-  const handleProductChange = async (selectedOptions) => {
-    const newSelectedProduct =
+  const handleserviceChange = async (selectedOptions) => {
+    const newSelectedservice =
       selectedOptions && selectedOptions.length > 0 ? selectedOptions[0] : null;
 
-    setSelectedProduct(newSelectedProduct);
+    setSelectedservice(newSelectedservice);
 
-    if (newSelectedProduct) {
+    if (newSelectedservice) {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/price-schemes?product_id=${newSelectedProduct.value}`,
+          `${apiBaseUrl}/api/price-schemes?service_id=${newSelectedservice.value}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -82,14 +82,14 @@ const Pricing = () => {
 
         const processedData = (response.data.data || []).map((item) => ({
           ...item,
-          product_name: item.product?.name || "-",
-          product_sku: item.product?.sku || "-",
+          service_name: item.service?.name || "-",
+          service_sku: item.service?.sku || "-",
         }));
 
         setData(processedData);
 
-        const productResponse = await axios.get(
-          `${apiBaseUrl}/v1/products/${newSelectedProduct.value}`,
+        const serviceResponse = await axios.get(
+          `${apiBaseUrl}/api/services/${newSelectedservice.value}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -97,27 +97,27 @@ const Pricing = () => {
           }
         );
 
-        if (productResponse.data?.data) {
-          setProductHPP(productResponse.data.data.hpp || "-");
+        if (serviceResponse.data?.data) {
+          setServiceCost(serviceResponse.data.data.hpp || "-");
         } else {
-          setProductHPP("-");
+          setServiceCost("-");
         }
       } catch (error) {
-        console.error("Error fetching product HPP:", error);
-        showAlert("Gagal memuat ulang data produk", "error");
-        setProductHPP("-");
+        console.error("Error fetching service HPP:", error);
+        showAlert("Gagal memuat ulang data Layanan", "error");
+        setServiceCost("-");
       } finally {
         setLoading(false);
       }
     } else {
       setData(data);
-      setProductHPP("-");
+      setServiceCost("-");
     }
   };
 
   const handleOpenModal = () => {
-    if (!selectedProduct) {
-      showAlert("Silakan pilih produk terlebih dahulu", "warning");
+    if (!selectedservice) {
+      showAlert("Silakan pilih Layanan terlebih dahulu", "warning");
       return;
     }
     setIsAddModalOpen(true);
@@ -126,10 +126,10 @@ const Pricing = () => {
   useEffect(() => {
     setPageTitle(pageInfo.title);
     setPageDescription(pageInfo.description);
-    const fetchProducts = async () => {
+    const fetchServices = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${apiBaseUrl}/v1/price-schemes`, {
+        const response = await axios.get(`${apiBaseUrl}/api/price-schemes`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -137,45 +137,45 @@ const Pricing = () => {
 
         const processedData = (response.data.data || []).map((item) => ({
           ...item,
-          product_name: item.product?.name || "-",
-          product_sku: item.product?.sku || "-",
+          service_name: item.service?.name || "-",
+          service_sku: item.service?.sku || "-",
         }));
 
         setData(processedData);
         if (
-          response.data.all_products &&
-          Array.isArray(response.data.all_products)
+          response.data.all_services &&
+          Array.isArray(response.data.all_services)
         ) {
-          const productOptions = response.data.all_products.map((product) => ({
-            value: product.id,
-            label: `${product.name} (${product.sku})`,
+          const serviceOptions = response.data.all_services.map((service) => ({
+            value: service.id,
+            label: `${service.name} (${service.sku})`,
           }));
 
           setOptions((prev) => ({
             ...prev,
-            product: productOptions,
+            service: serviceOptions,
           }));
 
-          if (productOptions.length > 0 && response.data.product) {
-            const defaultProduct = {
-              value: response.data.product.id,
-              label: `${response.data.product.name} (${response.data.product.sku})`,
+          if (serviceOptions.length > 0 && response.data.service) {
+            const defaultservice = {
+              value: response.data.service.id,
+              label: `${response.data.service.name} (${response.data.service.sku})`,
             };
-            setSelectedProduct(defaultProduct);
+            setSelectedservice(defaultservice);
 
             const filteredData = processedData.filter(
-              (item) => item.product_id === defaultProduct.value
+              (item) => item.service_id === defaultservice.value
             );
             setData(filteredData);
 
-            if (response.data.product.hpp) {
-              setProductHPP(response.data.product.hpp);
+            if (response.data.service.hpp) {
+              setServiceCost(response.data.service.hpp);
             }
           }
         }
       } catch (error) {
         showAlert(
-          `Gagal memuat data produk: ${
+          `Gagal memuat data Layanan: ${
             error.response?.data?.message || error.message
           }`,
           "error"
@@ -186,7 +186,7 @@ const Pricing = () => {
     };
 
     if (token) {
-      fetchProducts();
+      fetchServices();
     }
   }, [
     setPageTitle,
@@ -259,17 +259,17 @@ const Pricing = () => {
       <Header>
         <Select2Form
           label="Produk"
-          name="product_id"
-          value={selectedProduct ? [selectedProduct] : []}
-          onChange={handleProductChange}
-          options={options.product}
-          placeholder="Pilih produk"
+          name="service_id"
+          value={selectedservice ? [selectedservice] : []}
+          onChange={handleserviceChange}
+          options={options.service}
+          placeholder="Pilih Layanan"
         />
         <div>
           <Label htmlFor="hpp">HPP</Label>
           <h3 className="font-bold text-xl">
-            {productHPP !== "-"
-              ? `Rp ${parseFloat(productHPP).toLocaleString("id-ID")}`
+            {serviceCost !== "-"
+              ? `Rp ${parseFloat(serviceCost).toLocaleString("id-ID")}`
               : "-"}
           </h3>
         </div>
@@ -282,12 +282,12 @@ const Pricing = () => {
           >
             Tambah Skema Harga
           </Button>
-          {isAddModalOpen && selectedProduct && (
+          {isAddModalOpen && selectedservice && (
             <CreatePricingModal
               isOpen={isAddModalOpen}
               onClose={() => setIsAddModalOpen(false)}
-              product_id={selectedProduct.value}
-              product_name={selectedProduct.label}
+              service_id={selectedservice.value}
+              service_name={selectedservice.label}
             />
           )}
         </div>

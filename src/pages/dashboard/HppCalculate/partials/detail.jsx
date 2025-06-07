@@ -7,12 +7,12 @@ import { apiBaseUrl } from "../../../../config/api";
 import { useAuth } from "../../../../contexts/AuthContext";
 import SelectForm from "../../../../components/Elements/Select";
 
-const DetailHPPModal = ({ isOpen, onClose, product_cost_id }) => {
+const DetailHPPModal = ({ isOpen, onClose, service_cost_id }) => {
   const { user, token } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [productCostData, setProductCostData] = useState({
+  const [serviceCostData, setServiceCostData] = useState({
     id: "",
-    product_id: "",
+    service_id: "",
     cost_component_id: "",
     unit: "",
     unit_price: "",
@@ -29,11 +29,11 @@ const DetailHPPModal = ({ isOpen, onClose, product_cost_id }) => {
   });
   useEffect(() => {
     const fetchComponent = async () => {
-      if (!product_cost_id) return;
+      if (!service_cost_id) return;
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/hpp/${product_cost_id}`,
+          `${apiBaseUrl}/api/service-cost/${service_cost_id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -42,7 +42,7 @@ const DetailHPPModal = ({ isOpen, onClose, product_cost_id }) => {
           }
         );
         if (response.data && response.data.data) {
-          setProductCostData(response.data.data);
+          setServiceCostData(response.data.data);
         }
         if (response.data && response.data.data.cost_component) {
           setCostComponentData(response.data.data.cost_component);
@@ -53,10 +53,10 @@ const DetailHPPModal = ({ isOpen, onClose, product_cost_id }) => {
         setLoading(false);
       }
     };
-    if (isOpen && token && product_cost_id) {
+    if (isOpen && token && service_cost_id) {
       fetchComponent();
     }
-  }, [product_cost_id, token, isOpen]);
+  }, [service_cost_id, token, isOpen]);
   const handleNoOpChange = () => {};
   const componentTypeOptions = [
     { value: "", label: "Pilih Bahan Baku" },
@@ -112,7 +112,7 @@ const DetailHPPModal = ({ isOpen, onClose, product_cost_id }) => {
             name="conversion_qty"
             type="text"
             placeholder=""
-            value={`${productCostData.conversion_qty} - ${productCostData.unit}`}
+            value={`${serviceCostData.conversion_qty} - ${serviceCostData.unit}`}
             onChange={handleNoOpChange}
             readOnly={true}
           />
@@ -121,16 +121,16 @@ const DetailHPPModal = ({ isOpen, onClose, product_cost_id }) => {
             name="unit_price"
             type="text"
             placeholder=""
-            value={formatCurrency(productCostData.unit_price)}
+            value={formatCurrency(serviceCostData.unit_price)}
             onChange={handleNoOpChange}
             readOnly={true}
           />
           <InputForm
-            label="Kebutuhan Produk"
+            label="Kebutuhan Layanan"
             name="quantity"
             type="text"
             placeholder=""
-            value={`${productCostData.quantity} - ${productCostData.unit}`}
+            value={`${serviceCostData.quantity} - ${serviceCostData.unit}`}
             onChange={handleNoOpChange}
             readOnly={true}
           />
@@ -139,7 +139,7 @@ const DetailHPPModal = ({ isOpen, onClose, product_cost_id }) => {
             name="amount"
             type="text"
             placeholder=""
-            value={formatCurrency(productCostData.amount)}
+            value={formatCurrency(serviceCostData.amount)}
             onChange={handleNoOpChange}
             readOnly={true}
           />

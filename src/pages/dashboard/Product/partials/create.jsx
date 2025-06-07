@@ -6,7 +6,7 @@ import { useAuth } from "../../../../contexts/AuthContext";
 import { apiBaseUrl } from "../../../../config/api";
 import { useState } from "react";
 
-const CreateProductModal = ({ isOpen, onClose }) => {
+const CreateServiceModal = ({ isOpen, onClose }) => {
   const { showAlert } = useOutletContext();
   const { user, token } = useAuth();
   const [errors, setErrors] = useState({});
@@ -17,7 +17,7 @@ const CreateProductModal = ({ isOpen, onClose }) => {
     description: "",
   });
 
-  const handleCreateProduct = async (e) => {
+  const handleCreateService = async (e) => {
     e.preventDefault();
     setErrors({});
     try {
@@ -25,13 +25,13 @@ const CreateProductModal = ({ isOpen, onClose }) => {
         throw new Error("Anda belum login, silakan login terlebih dahulu");
       }
       const dataToSubmit = { ...formData, user_id: user.id };
-      await axios.post(`${apiBaseUrl}/v1/products`, dataToSubmit, {
+      await axios.post(`${apiBaseUrl}/api/services`, dataToSubmit, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-      showAlert("Produk berhasil disimpan!", "success");
+      showAlert("Layanan berhasil disimpan!", "success");
       onClose();
     } catch (error) {
       if (error.response && error.response.data) {
@@ -39,7 +39,7 @@ const CreateProductModal = ({ isOpen, onClose }) => {
           setErrors(error.response.data.errors);
         }
         showAlert(
-          `Error: ${error.response.data.message || "Gagal menyimpan produk"}`,
+          `Error: ${error.response.data.message || "Gagal menyimpan layanan"}`,
           "error"
         );
       } else {
@@ -65,15 +65,15 @@ const CreateProductModal = ({ isOpen, onClose }) => {
 
   return (
     <ModalForm
-      id="modal-add-product"
+      id="modal-add-service"
       isOpen={isOpen}
       onClose={onClose}
-      title="Tambah Produk Baru"
+      title="Tambah Layanan Baru"
       size="medium"
-      onSubmit={handleCreateProduct}
+      onSubmit={handleCreateService}
     >
       <InputForm
-        label="Nama Produk"
+        label="Nama layanan"
         name="name"
         type="text"
         placeholder="Dress A"
@@ -83,7 +83,7 @@ const CreateProductModal = ({ isOpen, onClose }) => {
         required
       />
       <InputForm
-        label="Stock Keeping Unit Produk"
+        label="Kode layanan"
         name="sku"
         type="text"
         placeholder="A0001"
@@ -93,7 +93,7 @@ const CreateProductModal = ({ isOpen, onClose }) => {
         required
       />
       <InputForm
-        label="Deskripsi Produk"
+        label="Deskripsi layanan"
         name="description"
         type="textarea"
         placeholder="(opsional)"
@@ -104,4 +104,4 @@ const CreateProductModal = ({ isOpen, onClose }) => {
     </ModalForm>
   );
 };
-export default CreateProductModal;
+export default CreateServiceModal;

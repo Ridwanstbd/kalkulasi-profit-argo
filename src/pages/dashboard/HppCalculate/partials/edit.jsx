@@ -8,13 +8,13 @@ import { useAuth } from "../../../../contexts/AuthContext";
 import { useEffect, useState } from "react";
 import SelectForm from "../../../../components/Elements/Select";
 
-const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
+const EditServiceCostModal = ({ isOpen, onClose, service_cost_id }) => {
   const { showAlert } = useOutletContext();
   const { token } = useAuth();
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     id: "",
-    product_id: "",
+    service_id: "",
     cost_component_id: "",
     unit: "",
     unit_price: "",
@@ -27,11 +27,11 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
 
   useEffect(() => {
     const fetchExpense = async () => {
-      if (!product_cost_id) return;
+      if (!service_cost_id) return;
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/hpp/${product_cost_id}`,
+          `${apiBaseUrl}/api/service-cost/${service_cost_id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -44,7 +44,7 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
 
           setFormData({
             id: productCostData.id,
-            product_id: productCostData.product_id,
+            service_id: productCostData.service_id,
             cost_component_id: productCostData.cost_component_id,
             unit: productCostData.unit,
             unit_price: productCostData.unit_price,
@@ -61,17 +61,17 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
       }
     };
 
-    if (isOpen && token && product_cost_id) {
+    if (isOpen && token && service_cost_id) {
       fetchExpense();
     }
-  }, [token, product_cost_id, isOpen, showAlert]);
+  }, [token, service_cost_id, isOpen, showAlert]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     try {
       const response = await axios.put(
-        `${apiBaseUrl}/v1/hpp/${product_cost_id}`,
+        `${apiBaseUrl}/api/service-cost/${service_cost_id}`,
         formData,
         {
           headers: {
@@ -82,11 +82,11 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
       );
 
       if (response.data && response.data.success) {
-        showAlert("Kategori berhasil diperbarui", "success");
+        showAlert("Komponen berhasil diperbarui", "success");
         onClose();
       } else {
         showAlert(
-          response.data?.message || "Gagal memperbarui Kategori",
+          response.data?.message || "Gagal memperbarui Komponen",
           "error"
         );
       }
@@ -94,7 +94,6 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
       console.error("Error updating category:", error);
 
       if (error.response && error.response.data && error.response.data.errors) {
-        // Handle validation errors from the backend
         const backendErrors = {};
         Object.keys(error.response.data.errors).forEach((key) => {
           backendErrors[key] = error.response.data.errors[key][0];
@@ -103,7 +102,7 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
       } else {
         showAlert(
           "error",
-          error.response?.data?.message || "Gagal memperbarui kategori"
+          error.response?.data?.message || "Gagal memperbarui Komponen"
         );
       }
     } finally {
@@ -132,6 +131,8 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
     { value: "pcs", label: "pcs" },
     { value: "set", label: "set" },
     { value: "ml", label: "ml" },
+    { value: "gram", label: "gram" },
+    { value: "kg", label: "kg" },
   ];
 
   return (
@@ -139,7 +140,7 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
       id="modal-edit-category"
       isOpen={isOpen}
       onClose={onClose}
-      title="Edit Kategori"
+      title="Edit Komponen"
       size="medium"
       onSubmit={handleSubmit}
       submitting={submitting}
@@ -158,7 +159,7 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
             onChange={handleChange}
             error={errors.unit}
             disabled={false}
-            helperText="Satuan kebutuhan untuk 1 produk jadi"
+            helperText="Satuan kebutuhan untuk 1 layanan jadi"
           />
 
           <InputForm
@@ -171,19 +172,6 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
             error={errors.unit_price}
             required
           />
-
-          <InputForm
-            label="Kuantitas Kebutuhan"
-            name="quantity"
-            type="number"
-            placeholder="1"
-            value={formData.quantity}
-            onChange={handleChange}
-            error={errors.quantity}
-            helperText="Kuantitas kebutuhan untuk 1 produk jadi"
-            required
-          />
-
           <InputForm
             label="Kuantitas Pembelian"
             name="conversion_qty"
@@ -195,9 +183,20 @@ const EditHPPModal = ({ isOpen, onClose, product_cost_id }) => {
             helperText="Jumlah beli barang yang dikonversi dalam satuan beli"
             required
           />
+          <InputForm
+            label="Kuantitas Kebutuhan"
+            name="quantity"
+            type="number"
+            placeholder="1"
+            value={formData.quantity}
+            onChange={handleChange}
+            error={errors.quantity}
+            helperText="Kuantitas kebutuhan untuk 1 layanan jadi"
+            required
+          />
         </>
       )}
     </ModalForm>
   );
 };
-export default EditHPPModal;
+export default EditServiceCostModal;

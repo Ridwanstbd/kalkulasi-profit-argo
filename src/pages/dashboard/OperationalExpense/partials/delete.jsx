@@ -16,7 +16,7 @@ const DeleteExpenseModal = ({ isOpen, onClose, expense_id, onDeleted }) => {
       setIsLoading(true);
 
       await axios.delete(
-        `${apiBaseUrl}/v1/operational-expenses/${expense_id}`,
+        `${apiBaseUrl}/api/operational-expenses/${expense_id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

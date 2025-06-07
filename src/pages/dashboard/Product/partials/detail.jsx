@@ -8,11 +8,11 @@ import Loading from "../../../../components/Elements/Loading";
 import InputForm from "../../../../components/Elements/Input";
 import DataTable from "../../../../components/Fragments/DataTable";
 
-const DetailProductModal = ({ isOpen, onClose, product_id }) => {
+const DetailServiceModal = ({ isOpen, onClose, service_id }) => {
   const { token } = useAuth();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [productData, setProductData] = useState({
+  const [serviceData, setServiceData] = useState({
     name: "",
     sku: "",
     hpp: "",
@@ -21,12 +21,12 @@ const DetailProductModal = ({ isOpen, onClose, product_id }) => {
   });
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      if (!product_id) return;
+    const fetchService = async () => {
+      if (!service_id) return;
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/products/${product_id}`,
+          `${apiBaseUrl}/api/services/${service_id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -35,9 +35,8 @@ const DetailProductModal = ({ isOpen, onClose, product_id }) => {
           }
         );
         if (response.data && response.data.data) {
-          setProductData(response.data.data);
+          setServiceData(response.data.data);
 
-          // Transform hpp_breakdown into array format for DataTable
           if (response.data.hpp_breakdown) {
             const breakdownData = [
               {
@@ -82,15 +81,15 @@ const DetailProductModal = ({ isOpen, onClose, product_id }) => {
           }
         }
       } catch (error) {
-        console.error("Error fetching product details:", error);
+        console.error("Error fetching Service details:", error);
       } finally {
         setLoading(false);
       }
     };
-    if (isOpen && token && product_id) {
-      fetchProduct();
+    if (isOpen && token && service_id) {
+      fetchService();
     }
-  }, [token, product_id, isOpen]);
+  }, [token, service_id, isOpen]);
 
   const formatCurrency = (value) => {
     if (!value) return "";
@@ -126,10 +125,10 @@ const DetailProductModal = ({ isOpen, onClose, product_id }) => {
 
   return (
     <Modal
-      id="modal-detail-product"
+      id="modal-detail-service"
       isOpen={isOpen}
       onClose={onClose}
-      title="Detail Produk"
+      title="Detail Layanan"
       size="large"
     >
       {loading ? (
@@ -138,52 +137,52 @@ const DetailProductModal = ({ isOpen, onClose, product_id }) => {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InputForm
-              label="Nama Produk"
+              label="Nama Layanan"
               name="name"
               type="text"
               placeholder="Dress A"
-              value={productData.name}
+              value={serviceData.name}
               onChange={handleNoOpChange}
               readOnly={true}
             />
             <InputForm
-              label="Stock Keeping Unit Produk"
+              label="Kode Layanan"
               name="sku"
               type="text"
               placeholder="A0001"
-              value={productData.sku}
+              value={serviceData.sku}
               onChange={handleNoOpChange}
               readOnly={true}
             />
             <InputForm
-              label="Harga Pokok Produk"
+              label="Harga Pokok Layanan"
               name="hpp"
               type="text"
-              value={formatCurrency(productData.hpp)}
+              value={formatCurrency(serviceData.hpp)}
               onChange={handleNoOpChange}
               readOnly={true}
             />
             <InputForm
-              label="Harga Jual Produk"
+              label="Harga Jual Layanan"
               name="selling_price"
               type="text"
-              value={formatCurrency(productData.selling_price)}
+              value={formatCurrency(serviceData.selling_price)}
               onChange={handleNoOpChange}
               readOnly={true}
             />
             <InputForm
-              label="Deskripsi Produk"
+              label="Deskripsi Layanan"
               name="description"
               type="textarea"
               placeholder="(tidak ada deskripsi)"
-              value={productData.description}
+              value={serviceData.description}
               onChange={handleNoOpChange}
               readOnly={true}
             />
           </div>
 
           <h2 className="text-lg font-semibold mt-6 mb-3">
-            Rincian Harga Pokok Produksi (HPP)
+            Rincian Harga Pokok Layanan (HPP)
           </h2>
           <DataTable data={data} columns={columns} pagination={false} />
         </>
@@ -192,4 +191,4 @@ const DetailProductModal = ({ isOpen, onClose, product_id }) => {
   );
 };
 
-export default DetailProductModal;
+export default DetailServiceModal;

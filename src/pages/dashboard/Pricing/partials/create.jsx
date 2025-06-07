@@ -7,7 +7,7 @@ import { useState } from "react";
 import InputForm from "../../../../components/Elements/Input";
 import Checkbox from "../../../../components/Elements/Checkbox";
 
-const CreatePricingModal = ({ isOpen, onClose, product_id, product_name }) => {
+const CreatePricingModal = ({ isOpen, onClose, service_id, service_name }) => {
   const { showAlert } = useOutletContext();
   const { token } = useAuth();
 
@@ -47,9 +47,9 @@ const CreatePricingModal = ({ isOpen, onClose, product_id, product_name }) => {
         return;
       }
 
-      const dataToSubmit = { ...formData, product_id };
+      const dataToSubmit = { ...formData, service_id };
 
-      await axios.post(`${apiBaseUrl}/v1/price-schemes`, dataToSubmit, {
+      await axios.post(`${apiBaseUrl}/api/price-schemes`, dataToSubmit, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ const CreatePricingModal = ({ isOpen, onClose, product_id, product_name }) => {
   return (
     <ModalForm
       id="modal-create-scheme"
-      title={`Tambah Skema Harga: ${product_name || "Produk"}`}
+      title={`Tambah Skema Harga: ${service_name || "Layanan"}`}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleCreateScheme}

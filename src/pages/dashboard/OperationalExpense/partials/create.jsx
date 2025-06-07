@@ -44,7 +44,7 @@ const CreateExpense = ({ isOpen, onClose }) => {
       }
 
       const dataToSubmit = { ...formData, user_id: user.id };
-      await axios.post(`${apiBaseUrl}/v1/operational-expenses`, dataToSubmit, {
+      await axios.post(`${apiBaseUrl}/api/operational-expenses`, dataToSubmit, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -120,7 +120,7 @@ const CreateExpense = ({ isOpen, onClose }) => {
         setCategoryLoading((prev) => ({ ...prev, category: true }));
 
         const response = await axios.get(
-          `${apiBaseUrl}/v1/expense-categories`,
+          `${apiBaseUrl}/api/expense-categories`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

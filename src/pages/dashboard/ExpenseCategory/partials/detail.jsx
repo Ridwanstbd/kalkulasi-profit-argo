@@ -22,7 +22,7 @@ const DetailCategoryModal = ({ isOpen, onClose, category_id }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/expense-categories/${category_id}`,
+          `${apiBaseUrl}/api/expense-categories/${category_id}`,
           {
             headers: {
               "Content-Type": "application/json",

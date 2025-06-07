@@ -27,7 +27,7 @@ const EditComponent = ({ isOpen, onClose, id }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/cost-components/${id}`,
+          `${apiBaseUrl}/api/cost-components/${id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -80,7 +80,7 @@ const EditComponent = ({ isOpen, onClose, id }) => {
     setSubmitting(true);
     try {
       const response = await axios.put(
-        `${apiBaseUrl}/v1/cost-components/${id}`,
+        `${apiBaseUrl}/api/cost-components/${id}`,
         formData,
         {
           headers: {

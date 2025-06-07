@@ -3,31 +3,31 @@ import { useEffect, useState } from "react";
 import { apiBaseUrl } from "../../../config/api";
 import { useAuth } from "../../../contexts/AuthContext";
 import Widget from "../../../components/Elements/Widget/Widget";
-import CreateProductModal from "./partials/create";
+import CreateServiceModal from "./partials/create";
 import useDocumentHead from "../../../hooks/useDocumentHead";
 import DataTable from "../../../components/Fragments/DataTable";
 import TableActions from "../../../components/Elements/TableActions";
 import Card from "../../../components/Elements/Card";
 import Loading from "../../../components/Elements/Loading";
 import axios from "axios";
-import DetailProductModal from "./partials/detail";
-import EditProductModal from "./partials/edit";
-import DeleteProductModal from "./partials/delete";
+import DetailServiceModal from "./partials/detail";
+import EditServiceModal from "./partials/edit";
+import DeleteServiceModal from "./partials/delete";
 import Header from "../../../components/Fragments/Header";
 
-const Product = () => {
+const Service = () => {
   const { setPageTitle, setPageDescription } = useOutletContext();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [loading, setLoading] = useState(false);
   const { token } = useAuth();
   const { showAlert } = useOutletContext();
   const [data, setData] = useState([]);
   const [stats, setStats] = useState({
-    total_products: 0,
+    total_services: 0,
     avg_selling_price: 0,
     avg_hpp: 0,
     total_selling_value: 0,
@@ -35,9 +35,9 @@ const Product = () => {
     profit_margin: 0,
   });
   const pageInfo = {
-    title: "Produk Saya",
+    title: "Layanan Saya",
     description:
-      "Halaman ini untuk mengelola produk yang kamu butuhkan, mulai dari membuat mengubah dan menghapus",
+      "Halaman ini untuk mengelola Layanan yang kamu butuhkan, mulai dari membuat mengubah dan menghapus",
   };
   useDocumentHead(pageInfo);
 
@@ -45,25 +45,23 @@ const Product = () => {
     setPageTitle(pageInfo.title);
     setPageDescription(pageInfo.description);
 
-    const fetchProducts = async () => {
+    const fetchServices = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${apiBaseUrl}/v1/products`, {
+        const response = await axios.get(`${apiBaseUrl}/api/services`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        // Set data from response
         setData(response.data.data || []);
 
-        // Set stats from response if available
         if (response.data.stats) {
           setStats(response.data.stats);
         }
       } catch (error) {
         showAlert(
-          `Gagal memuat data produk: ${
+          `Gagal memuat data: ${
             error.response?.data?.message || error.message
           }`,
           "error"
@@ -74,7 +72,7 @@ const Product = () => {
     };
 
     if (token) {
-      fetchProducts();
+      fetchServices();
     }
   }, [
     setPageTitle,
@@ -85,35 +83,31 @@ const Product = () => {
     showAlert,
   ]);
 
-  // Handler untuk aksi
   const handleDetail = (row) => {
-    setSelectedProductId(row.id);
+    setSelectedServiceId(row.id);
     setIsDetailModalOpen(true);
   };
 
   const handleEdit = (row) => {
-    setSelectedProductId(row.id);
+    setSelectedServiceId(row.id);
     setIsEditModalOpen(true);
   };
 
   const handleDelete = (row) => {
-    setSelectedProductId(row.id);
+    setSelectedServiceId(row.id);
     setIsDeleteModalOpen(true);
   };
 
-  // Handler untuk update setelah produk dihapus
-  const handleProductDeleted = (deletedProductId) => {
-    setData(data.filter((item) => item.id !== deletedProductId));
-    showAlert("Produk berhasil dihapus", "success");
+  const handleServiceDeleted = (deletedServiceId) => {
+    setData(data.filter((item) => item.id !== deletedServiceId));
+    showAlert("Layanan berhasil dihapus", "success");
 
-    // Update stats after deletion
     setStats({
       ...stats,
-      total_products: stats.total_products - 1,
+      total_services: stats.total_services - 1,
     });
   };
 
-  // Definisi kolom untuk tabel
   const columns = [
     {
       accessor: "rowNumber",
@@ -128,13 +122,13 @@ const Product = () => {
     },
     {
       accessor: "sku",
-      name: "Stock Keeping Unit",
+      name: "Kode",
       sortable: true,
       filterable: true,
     },
     {
       accessor: "hpp",
-      name: "Harga Pokok Produksi",
+      name: "Harga Pokok Layanan",
       sortable: true,
       filterable: true,
       cell: (row) => `Rp ${parseFloat(row.hpp).toLocaleString("id-ID")}`,
@@ -168,7 +162,6 @@ const Product = () => {
     return <Loading />;
   }
 
-  // Format currency values
   const formatCurrency = (value) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -181,43 +174,43 @@ const Product = () => {
     <>
       <Header>
         <Widget
-          title="Produk"
-          count={stats.total_products}
+          title="Layanan"
+          count={stats.total_services}
           status="Jumlah"
-          description="jumlah produk tersimpan"
+          description="jumlah Layanan tersimpan"
         />
         <Widget
           title="Harga Retail"
           count={formatCurrency(stats.avg_selling_price)}
           status="Rata-rata"
-          description="harga retail produk"
+          description="harga retail Layanan"
         />
         <Widget
-          title="Harga Pokok Produk"
+          title="Harga Pokok Layanan"
           count={formatCurrency(stats.avg_hpp)}
           status="Rata-rata"
-          description="harga pokok produk"
+          description="harga pokok Layanan"
         />
         <Widget
-          title="Harga Pokok Produk"
+          title="Harga Pokok Layanan"
           count={formatCurrency(stats.total_hpp_value)}
           status="Total"
-          description="harga pokok produk"
+          description="harga pokok Layanan"
         />
         <Widget
-          title="Margin Produk"
+          title="Margin Layanan"
           count={formatCurrency(stats.profit_margin)}
           status="Total"
-          description="margin produk"
+          description="margin Layanan"
         />
         <Widget
           showActionCard={true}
-          actionButtonText="Tambah Produk"
-          actionDescription="Buat Produk Baru"
+          actionButtonText="Tambah Layanan"
+          actionDescription="Buat Layanan Baru"
           onAction={() => setIsAddModalOpen(true)}
           imageUrl="../../../../public/img/illustrations/create-illustration.jpg"
         />
-        <CreateProductModal
+        <CreateServiceModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
         />
@@ -230,24 +223,24 @@ const Product = () => {
           pagination={true}
           filterable={true}
         />
-        <DetailProductModal
+        <DetailServiceModal
           isOpen={isDetailModalOpen}
           onClose={() => setIsDetailModalOpen(false)}
-          product_id={selectedProductId}
+          Service_id={selectedServiceId}
         />
-        <EditProductModal
+        <EditServiceModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          product_id={selectedProductId}
+          Service_id={selectedServiceId}
         />
-        <DeleteProductModal
+        <DeleteServiceModal
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
-          product_id={selectedProductId}
-          onProductDeleted={handleProductDeleted}
+          Service_id={selectedServiceId}
+          onServiceDeleted={handleServiceDeleted}
         />
       </Card>
     </>
   );
 };
-export default Product;
+export default Service;

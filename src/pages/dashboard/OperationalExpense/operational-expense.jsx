@@ -75,7 +75,7 @@ const OperationalExpense = () => {
     const fetchData = async (year = null, month = null) => {
       try {
         setLoading(true);
-        let url = `${apiBaseUrl}/v1/operational-expenses`;
+        let url = `${apiBaseUrl}/api/operational-expenses`;
 
         const params = new URLSearchParams();
         if (year) params.append("year", year);

@@ -16,7 +16,7 @@ const DetailPricingModal = ({ isOpen, onClose, price_id }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/price-schemes/${price_id}`,
+          `${apiBaseUrl}/api/price-schemes/${price_id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -28,7 +28,7 @@ const DetailPricingModal = ({ isOpen, onClose, price_id }) => {
           setPriceData(response.data.data);
         }
       } catch (error) {
-        console.error("Error fetching product details:", error);
+        console.error("Error fetching details:", error);
       } finally {
         setLoading(false);
       }
@@ -61,7 +61,7 @@ const DetailPricingModal = ({ isOpen, onClose, price_id }) => {
       id="modal-detail-hpp"
       isOpen={isOpen}
       onClose={onClose}
-      title="Detail Komponen"
+      title="Detail Skema"
       size="medium"
     >
       {loading ? (

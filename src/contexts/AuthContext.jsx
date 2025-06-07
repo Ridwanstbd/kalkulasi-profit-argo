@@ -10,17 +10,16 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Function to check if token is expired
   const isTokenExpired = (token) => {
     if (!token) return true;
 
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
-      const expiry = payload.exp * 1000; // Convert to milliseconds
+      const expiry = payload.exp * 1000;
       return Date.now() >= expiry;
     } catch (error) {
       console.error("Token parsing error:", error);
-      return true; // If there's any error parsing, consider token expired
+      return true;
     }
   };
 
@@ -31,7 +30,6 @@ export const AuthProvider = ({ children }) => {
         const storedUser = localStorage.getItem("user");
 
         if (storedToken && storedUser) {
-          // Check if token is expired
           if (isTokenExpired(storedToken)) {
             console.log("Token expired, logging out");
             logout();
@@ -52,32 +50,27 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  // Setup token expiration checking
   const setupTokenExpirationCheck = (currentToken) => {
     try {
       if (!currentToken) return;
 
       const payload = JSON.parse(atob(currentToken.split(".")[1]));
-      const expiryTime = payload.exp * 1000; // Convert to milliseconds
+      const expiryTime = payload.exp * 1000;
       const timeUntilExpiry = expiryTime - Date.now();
 
       if (timeUntilExpiry <= 0) {
-        // Token already expired
         logout();
         return;
       }
 
-      // Set timer to logout when token expires
       const tokenExpiryTimer = setTimeout(() => {
         console.log("Token expired, logging out automatically");
         logout();
       }, timeUntilExpiry);
 
-      // Cleanup timer on unmount
       return () => clearTimeout(tokenExpiryTimer);
     } catch (error) {
       console.error("Error setting up token expiration check:", error);
-      // If we can't read the token, better to logout
       logout();
     }
   };
@@ -90,16 +83,13 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Intercept API responses to check for token validity
   useEffect(() => {
     const originalFetch = window.fetch;
 
     window.fetch = async (...args) => {
       const response = await originalFetch(...args);
 
-      // Check if response status is 401 (Unauthorized)
       if (response.status === 401) {
-        // Check if the URL is not the logout endpoint to avoid infinite loops
         const url = typeof args[0] === "string" ? args[0] : args[0].url;
         if (!url.includes("/logout")) {
           console.log("Received 401 response, logging out");
@@ -148,7 +138,6 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
-      // Instead of using useNavigate, we'll use window.location for redirection
       window.location.href = "/auth/login";
     }
   };

@@ -6,23 +6,24 @@ import { useAuth } from "../../../../contexts/AuthContext";
 import { useEffect, useState } from "react";
 import Select2Form from "../../../../components/Elements/Select2";
 import InputForm from "../../../../components/Elements/Input";
-import SelectForm from "../../../../components/Elements/Select";
 
 const CreateSales = ({ isOpen, onClose }) => {
   const { showAlert } = useOutletContext();
   const { token } = useAuth();
-  const [productLoading, setProductLoading] = useState({
-    product: false,
+  const [serviceLoading, setServiceLoading] = useState({
+    service: false,
   });
   const [errors, setErrors] = useState({});
-  const [selectedProduct, setSelectedProduct] = useState([]);
+  const [selectedService, setSelectedService] = useState([]);
   const [options, setOptions] = useState({
-    product: [],
+    service: [],
   });
   const [formData, setFormData] = useState({});
+  const [services, setServices] = useState([]);
 
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
+  const currentDate = new Date();
 
   const handleCreateSales = async (e) => {
     e.preventDefault();
@@ -31,12 +32,20 @@ const CreateSales = ({ isOpen, onClose }) => {
       if (!token) {
         throw new Error("Anda belum login, silakan login terlebih dahulu");
       }
-      if (!formData.product_id) {
-        setErrors((prev) => ({ ...prev, product: "Produk harus dipilih!" }));
+      if (!formData.service_id) {
+        setErrors((prev) => ({ ...prev, service: "Layanan harus dipilih!" }));
         return;
       }
 
-      await axios.post(`${apiBaseUrl}/v1/sales`, formData, {
+      const submitData = {
+        ...formData,
+        hpp: formData.hpp ? Math.floor(parseFloat(formData.hpp)) : undefined,
+        selling_price: formData.selling_price
+          ? Math.floor(parseFloat(formData.selling_price))
+          : undefined,
+      };
+
+      await axios.post(`${apiBaseUrl}/api/sales`, submitData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -60,70 +69,74 @@ const CreateSales = ({ isOpen, onClose }) => {
     }
   };
 
-  const generateYearOptions = () => {
-    const years = [];
-    years.push({ value: "", label: "Pilih Tahun" });
-
-    for (let i = currentYear; i >= currentYear - 5; i--) {
-      years.push({ value: i.toString(), label: i.toString() });
+  const formatDateForInput = () => {
+    if (formData.year && formData.month && formData.date) {
+      const year = formData.year;
+      const month = formData.month.toString().padStart(2, "0");
+      const date = formData.date.toString().padStart(2, "0");
+      return `${year}-${month}-${date}`;
     }
-
-    return years;
+    return "";
   };
 
-  const getMonthOptions = () => {
-    const baseMonthOptions = [
-      { value: "", label: "Pilih Bulan" },
-      { value: "1", label: "Januari" },
-      { value: "2", label: "Februari" },
-      { value: "3", label: "Maret" },
-      { value: "4", label: "April" },
-      { value: "5", label: "Mei" },
-      { value: "6", label: "Juni" },
-      { value: "7", label: "Juli" },
-      { value: "8", label: "Agustus" },
-      { value: "9", label: "September" },
-      { value: "10", label: "Oktober" },
-      { value: "11", label: "November" },
-      { value: "12", label: "Desember" },
-    ];
-
-    if (formData.year === currentYear.toString()) {
-      return baseMonthOptions.filter(
-        (month) => month.value === "" || parseInt(month.value) <= currentMonth
-      );
+  const handleDateInputChange = (e) => {
+    const dateValue = e.target.value;
+    if (dateValue) {
+      const [year, month, date] = dateValue.split("-");
+      setFormData((prev) => ({
+        ...prev,
+        year: year,
+        month: parseInt(month).toString(),
+        date: parseInt(date).toString(),
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        year: "",
+        month: "",
+        date: "",
+      }));
     }
 
-    return baseMonthOptions;
+    if (errors.year || errors.month || errors.date) {
+      setErrors((prev) => ({
+        ...prev,
+        year: null,
+        month: null,
+        date: null,
+      }));
+    }
   };
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchService = async () => {
       try {
-        setProductLoading((prev) => ({ ...prev, product: true }));
+        setServiceLoading((prev) => ({ ...prev, service: true }));
 
-        const response = await axios.get(`${apiBaseUrl}/v1/products`, {
+        const response = await axios.get(`${apiBaseUrl}/api/services`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.data.data;
 
-        const formattedData = data.map((product) => ({
-          value: product.id,
-          label: product.name,
+        setServices(data);
+
+        const formattedData = data.map((service) => ({
+          value: service.id,
+          label: `${service.name} - ${service.sku}`,
         }));
 
-        setOptions((prev) => ({ ...prev, product: formattedData }));
+        setOptions((prev) => ({ ...prev, service: formattedData }));
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching services:", error);
         showAlert("Gagal mengambil data kategori", "error");
       } finally {
-        setProductLoading((prev) => ({ ...prev, product: false }));
+        setServiceLoading((prev) => ({ ...prev, service: false }));
       }
     };
     if (token) {
-      fetchProduct();
+      fetchService();
     }
-  }, [token, showAlert, setProductLoading]);
+  }, [token, showAlert, setServiceLoading]);
 
   useEffect(() => {
     if (
@@ -133,36 +146,55 @@ const CreateSales = ({ isOpen, onClose }) => {
       setFormData((prev) => ({
         ...prev,
         month: "",
+        date: "",
       }));
     }
   }, [formData.year, currentMonth, currentYear, formData.month]);
 
-  const handleProductChange = (value) => {
-    setSelectedProduct(value);
+  const handleserviceChange = (value) => {
+    setSelectedService(value);
     if (value && value.length > 0) {
+      const selectedServiceId = value[0].value;
+      const selectedServiceData = services.find(
+        (service) => service.id === selectedServiceId
+      );
+
       setFormData((prev) => ({
         ...prev,
-        product_id: value[0].value,
+        service_id: selectedServiceId,
+        hpp: selectedServiceData?.hpp || "",
+        selling_price:
+          selectedServiceData?.selling_price ||
+          selectedServiceData?.price ||
+          "",
       }));
     } else {
       setFormData((prev) => ({
         ...prev,
-        product_id: "",
+        service_id: "",
+        hpp: "",
+        selling_price: "",
       }));
     }
-    if (errors.product || errors.product_id) {
+    if (errors.service || errors.service_id) {
       setErrors((prev) => ({
         ...prev,
-        product: undefined,
+        service: undefined,
       }));
     }
   };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    let processedValue = type === "checkbox" ? checked : value;
+
+    if ((name === "hpp" || name === "selling_price") && value !== "") {
+      processedValue = Math.floor(parseFloat(value)) || "";
+    }
+
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: processedValue,
     });
 
     if (errors[name]) {
@@ -176,65 +208,61 @@ const CreateSales = ({ isOpen, onClose }) => {
   return (
     <ModalForm
       id="modal-create-expense"
-      title="Tambah Rekap Penjualan"
+      title="Tambah Penjualan"
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleCreateSales}
       size="medium"
     >
+      <InputForm
+        label="Nama Klien"
+        name="name"
+        type="text"
+        placeholder="Fauzan Barat"
+        value={formData.name || ""}
+        onChange={handleChange}
+        error={errors.name}
+        required
+      />
       <Select2Form
-        label="Produk"
-        name="product_id"
-        placeholder="Pilih Produk..."
-        searchPlaceholder="Cari Produk..."
-        options={options.product}
-        value={selectedProduct}
-        onChange={handleProductChange}
-        error={errors.product || errors.product_id}
-        isLoading={productLoading.product}
+        label="Layanan"
+        name="service_id"
+        placeholder="Pilih Layanan..."
+        searchPlaceholder="Cari Layanan..."
+        options={options.service}
+        value={selectedService}
+        onChange={handleserviceChange}
+        error={errors.service || errors.service_id}
+        isLoading={serviceLoading.service}
         required
       />
 
       <InputForm
-        label="Terjual"
-        name="number_of_sales"
-        type="number"
-        placeholder="100"
-        value={formData.number_of_sales}
-        onChange={handleChange}
-        error={errors.number_of_sales}
-        helperText="Jumlah Satuan Produk per bulan yang terjual"
+        label="Tanggal"
+        name="fullDate"
+        type="date"
+        value={formatDateForInput()}
+        onChange={handleDateInputChange}
+        error={errors.year || errors.month || errors.date}
+        max={`${currentYear}-${currentMonth
+          .toString()
+          .padStart(2, "0")}-${currentDate
+          .getDate()
+          .toString()
+          .padStart(2, "0")}`}
+        min={`${currentYear - 5}-01-01`}
         required
       />
-      <SelectForm
-        label="Tahun"
-        ariaLabel="Tahun"
-        name="year"
-        value={formData.year}
-        options={generateYearOptions()}
-        onChange={handleChange}
-        error={errors.year}
-        required
-      />
-      <SelectForm
-        label="Bulan"
-        ariaLabel="Bulan"
-        name="month"
-        value={formData.month}
-        options={getMonthOptions()}
-        onChange={handleChange}
-        error={errors.month}
-        required
-      />
+
       <InputForm
-        label="HPP Terjual"
+        label="Biaya Layanan Terjual"
         name="hpp"
         type="number"
         placeholder="100"
-        value={formData.hpp}
+        value={formData.hpp || ""}
         onChange={handleChange}
         error={errors.hpp}
-        helperText="Harga Pokok Produk per unit yang terjual"
+        helperText="Harga Pokok Layanan per unit yang terjual"
         required
       />
       <InputForm
@@ -242,13 +270,14 @@ const CreateSales = ({ isOpen, onClose }) => {
         name="selling_price"
         type="number"
         placeholder="100"
-        value={formData.selling_price}
+        value={formData.selling_price || ""}
         onChange={handleChange}
         error={errors.selling_price}
-        helperText="Harga Jual Produk per unit yang terjual"
+        helperText="Harga Jual Layanan per unit yang terjual"
         required
       />
     </ModalForm>
   );
 };
+
 export default CreateSales;

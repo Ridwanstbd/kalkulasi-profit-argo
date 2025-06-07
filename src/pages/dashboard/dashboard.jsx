@@ -49,7 +49,7 @@ const Dashboard = () => {
 
       try {
         setLoading(true);
-        let url = `${apiBaseUrl}/v1/stats`;
+        let url = `${apiBaseUrl}/api/stats`;
 
         const params = new URLSearchParams();
         if (selectedYear) params.append("year", selectedYear);
@@ -123,7 +123,7 @@ const Dashboard = () => {
         const fetchPromises = Array.from({ length: 12 }, (_, i) => i + 1).map(
           async (month) => {
             try {
-              const url = `${apiBaseUrl}/v1/stats?year=${selectedYear}&month=${month}`;
+              const url = `${apiBaseUrl}/api/stats?year=${selectedYear}&month=${month}`;
 
               const response = await fetch(url, {
                 headers: {

@@ -5,23 +5,28 @@ import { useAuth } from "../../../../contexts/AuthContext";
 import axios from "axios";
 import { apiBaseUrl } from "../../../../config/api";
 
-const DeleteHPPModal = ({ isOpen, onClose, product_cost_id, onDeleted }) => {
+const DeleteServiceCostModal = ({
+  isOpen,
+  onClose,
+  service_cost_id,
+  onDeleted,
+}) => {
   const { showAlert } = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
   const { token } = useAuth();
 
   const handleDelete = async () => {
-    if (!product_cost_id) return;
+    if (!service_cost_id) return;
     try {
       setIsLoading(true);
 
-      await axios.delete(`${apiBaseUrl}/v1/hpp/${product_cost_id}`, {
+      await axios.delete(`${apiBaseUrl}/api/service-cost/${service_cost_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       if (typeof onDeleted === "function") {
-        onDeleted(product_cost_id);
+        onDeleted(service_cost_id);
       }
       onClose();
     } catch (error) {
@@ -48,4 +53,4 @@ const DeleteHPPModal = ({ isOpen, onClose, product_cost_id, onDeleted }) => {
     />
   );
 };
-export default DeleteHPPModal;
+export default DeleteServiceCostModal;

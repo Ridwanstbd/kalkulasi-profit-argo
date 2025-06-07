@@ -25,7 +25,7 @@ const CreateCategory = ({ isOpen, onClose }) => {
         throw new Error("Anda belum login, silakan login terlebih dahulu");
       }
       const dataToSubmit = { ...formData, user_id: user.id };
-      await axios.post(`${apiBaseUrl}/v1/expense-categories`, dataToSubmit, {
+      await axios.post(`${apiBaseUrl}/api/expense-categories`, dataToSubmit, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

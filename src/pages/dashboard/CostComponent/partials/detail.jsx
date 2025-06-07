@@ -23,7 +23,7 @@ const DetailComponent = ({ isOpen, onClose, id }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/cost-components/${id}`,
+          `${apiBaseUrl}/api/cost-components/${id}`,
           {
             headers: {
               "Content-Type": "application/json",

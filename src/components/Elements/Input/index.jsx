@@ -16,6 +16,7 @@ const InputForm = (props) => {
     readonly = false,
     error = null,
     helperText = "",
+    color,
     ...rest
   } = props;
 
@@ -23,7 +24,9 @@ const InputForm = (props) => {
 
   return (
     <div className="mb-2">
-      <Label htmlFor={name}>{label}</Label>
+      <Label htmlFor={name} color={color}>
+        {label}
+      </Label>
       <Input
         type={type}
         name={name}

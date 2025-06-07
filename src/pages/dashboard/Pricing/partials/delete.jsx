@@ -15,7 +15,7 @@ const DeletePricingModal = ({ isOpen, onClose, price_id, onDeleted }) => {
     try {
       setIsLoading(true);
 
-      await axios.delete(`${apiBaseUrl}/v1/price-schemes/${price_id}`, {
+      await axios.delete(`${apiBaseUrl}/api/price-schemes/${price_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

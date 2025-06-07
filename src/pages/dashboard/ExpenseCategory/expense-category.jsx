@@ -91,7 +91,7 @@ const ExpenseCategory = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${apiBaseUrl}/v1/expense-categories`,
+          `${apiBaseUrl}/api/expense-categories`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

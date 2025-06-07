@@ -33,7 +33,7 @@ const EditSalesModal = ({ isOpen, onClose, sales_id }) => {
       }
 
       await axios.put(
-        `${apiBaseUrl}/v1/sales/${sales_id}`,
+        `${apiBaseUrl}/api/sales/${sales_id}`,
         {
           number_of_sales: formData.number_of_sales,
           hpp: formData.hpp,
@@ -72,12 +72,15 @@ const EditSalesModal = ({ isOpen, onClose, sales_id }) => {
       if (!sales_id) return;
       setLoading(true);
       try {
-        const response = await axios.get(`${apiBaseUrl}/v1/sales/${sales_id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `${apiBaseUrl}/api/sales/${sales_id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (response.data && response.data.data) {
           const data = response.data.data;
           setSalesData(data);

@@ -5,38 +5,37 @@ import ModalDelete from "../../../../components/Fragments/ModalDelete";
 import axios from "axios";
 import { useOutletContext } from "react-router-dom";
 
-const DeleteProductModal = ({
+const DeleteServiceModal = ({
   isOpen,
   onClose,
-  product_id,
-  onProductDeleted,
+  service_id,
+  onServiceDeleted,
 }) => {
   const { showAlert } = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
   const { token } = useAuth();
 
   const handleDelete = async () => {
-    if (!product_id) return;
+    if (!service_id) return;
 
     try {
       setIsLoading(true);
 
-      await axios.delete(`${apiBaseUrl}/v1/products/${product_id}`, {
+      await axios.delete(`${apiBaseUrl}/api/services/${service_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      if (typeof onProductDeleted === "function") {
-        onProductDeleted(product_id);
+      if (typeof onServiceDeleted === "function") {
+        onServiceDeleted(service_id);
       }
 
-      // Close the modal
       onClose();
     } catch (error) {
-      console.error("Error deleting product:", error);
+      console.error("Error Menghapus Layanan:", error);
       showAlert(
-        `Gagal menghapus produk: ${
+        `Gagal menghapus layanan: ${
           error.response?.data?.message || error.message
         }`,
         "error"
@@ -51,8 +50,8 @@ const DeleteProductModal = ({
       isOpen={isOpen}
       onClose={onClose}
       onDelete={handleDelete}
-      title="Hapus Produk"
-      message="Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak dapat dibatalkan."
+      title="Hapus layanan"
+      message="Apakah Anda yakin ingin menghapus layanan ini? Tindakan ini tidak dapat dibatalkan."
       deleteButtonText="Hapus"
       cancelButtonText="Batalkan"
       size="small"
@@ -61,4 +60,4 @@ const DeleteProductModal = ({
   );
 };
 
-export default DeleteProductModal;
+export default DeleteServiceModal;

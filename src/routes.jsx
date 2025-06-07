@@ -1,14 +1,13 @@
 import Index from "./pages";
 import SignIn from "./pages/auth/sign-in";
-import SignUp from "./pages/auth/sign-up";
 import ForgotPassword from "./pages/auth/forgot-password";
 import Profile from "./pages/dashboard/Profile/profile";
 import ResetPassword from "./pages/auth/reset-password";
-import HppCalculate from "./pages/dashboard/HppCalculate/hpp-calculate";
+import ServiceCost from "./pages/dashboard/HppCalculate/service-cost";
 import OperationalExpense from "./pages/dashboard/OperationalExpense/operational-expense";
 import Pricing from "./pages/dashboard/Pricing/pricing";
 import SalesRecap from "./pages/dashboard/SalesRecap/sales-recap";
-import Product from "./pages/dashboard/Product/product";
+import Service from "./pages/dashboard/Product/service";
 import CostComponent from "./pages/dashboard/CostComponent/cost-component";
 import ExpenseCategory from "./pages/dashboard/ExpenseCategory/expense-category";
 import Dashboard from "./pages/dashboard/dashboard";
@@ -32,10 +31,6 @@ const routes = [
         element: <SignIn />,
       },
       {
-        path: "register",
-        element: <SignUp />,
-      },
-      {
         path: "forgot-password",
         element: <ForgotPassword />,
       },
@@ -57,8 +52,8 @@ const routes = [
         element: <Profile />,
       },
       {
-        path: "hpp",
-        element: <HppCalculate />,
+        path: "service-cost",
+        element: <ServiceCost />,
       },
       {
         path: "expense-categories",
@@ -78,7 +73,7 @@ const routes = [
       },
       {
         path: "products",
-        element: <Product />,
+        element: <Service />,
       },
       {
         path: "cost-components",

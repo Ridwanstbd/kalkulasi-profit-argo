@@ -1,14 +1,18 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/Fragments/Navbar";
 
 export function Guest() {
   return (
-    <>
-      <Navbar />
-      <div className="max-w-5xl mx-auto">
-        <Outlet />
-      </div>
-    </>
+    <div
+      className="min-h-screen w-full flex items-center justify-center p-4 backdrop-blur-sm"
+      style={{
+        backgroundImage: "url('/img/images/bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <Outlet />
+    </div>
   );
 }
 

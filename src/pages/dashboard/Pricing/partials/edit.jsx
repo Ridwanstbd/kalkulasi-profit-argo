@@ -30,7 +30,7 @@ const EditPricingModal = ({ isOpen, onClose, price_id, product_name }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/price-schemes/${price_id}`,
+          `${apiBaseUrl}/api/price-schemes/${price_id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -114,7 +114,7 @@ const EditPricingModal = ({ isOpen, onClose, price_id, product_name }) => {
       }
 
       await axios.put(
-        `${apiBaseUrl}/v1/price-schemes/${price_id}`,
+        `${apiBaseUrl}/api/price-schemes/${price_id}`,
         dataToSubmit,
         {
           headers: {

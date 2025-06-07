@@ -49,7 +49,7 @@ const ForgotPassword = () => {
     }
     setLoading(true);
     try {
-      const response = await fetch(`${apiBaseUrl}/v1/forgot-password`, {
+      const response = await fetch(`${apiBaseUrl}/api/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -116,6 +116,7 @@ const ForgotPassword = () => {
           value={formData.email}
           onChange={handleChange}
           error={errors.email}
+          color="text-white"
           required
         />
         <Checkbox
@@ -123,6 +124,7 @@ const ForgotPassword = () => {
           label="Izinkan pihak aplikasi untuk mengirim link atur ulang kata sandi ke email saya"
           checked={isConfirmed}
           onChange={handleChange}
+          color="text-white"
         />
         <Button
           type="submit"

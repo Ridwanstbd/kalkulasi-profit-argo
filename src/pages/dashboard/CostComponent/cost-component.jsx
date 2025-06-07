@@ -110,7 +110,7 @@ const CostComponent = () => {
     const fetch = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${apiBaseUrl}/v1/cost-components`, {
+        const response = await axios.get(`${apiBaseUrl}/api/cost-components`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

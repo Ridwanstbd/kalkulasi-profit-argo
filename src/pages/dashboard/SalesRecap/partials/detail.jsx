@@ -17,12 +17,15 @@ const DetailSalesModal = ({ isOpen, onClose, sales_id }) => {
       if (!sales_id) return;
       setLoading(true);
       try {
-        const response = await axios.get(`${apiBaseUrl}/v1/sales/${sales_id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          `${apiBaseUrl}/api/sales/${sales_id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (response.data && response.data.data) {
           setSalesData(response.data.data);
         }
@@ -91,11 +94,20 @@ const DetailSalesModal = ({ isOpen, onClose, sales_id }) => {
       ) : (
         <>
           <InputForm
-            label="Nama Produk"
+            label="Nama Klien"
+            name="name"
+            type="text"
+            placeholder=""
+            value={salesData.name}
+            onChange={handleNoOpChange}
+            readOnly
+          />
+          <InputForm
+            label="Nama Layanan"
             name="name"
             type="text"
             placeholder="Dress A"
-            value={salesData.product_name}
+            value={salesData.service_name}
             onChange={handleNoOpChange}
             readOnly
           />
@@ -117,10 +129,10 @@ const DetailSalesModal = ({ isOpen, onClose, sales_id }) => {
             disabled={true}
           />
           <InputForm
-            label="Jumlah Terjual"
-            name="number_of_sales"
+            label="Tanggal"
+            name="date"
             type="numeric"
-            value={salesData.number_of_sales}
+            value={salesData.date}
             onChange={handleNoOpChange}
             readOnly
           />
@@ -143,7 +155,7 @@ const DetailSalesModal = ({ isOpen, onClose, sales_id }) => {
             readOnly
           />
           <InputForm
-            label="Keuntungan Per Produk"
+            label="Keuntungan Layanan"
             name="unit"
             type="text"
             placeholder=""
@@ -152,20 +164,11 @@ const DetailSalesModal = ({ isOpen, onClose, sales_id }) => {
             readOnly
           />
           <InputForm
-            label="Total Keuntungan Penjualan"
-            name="unit"
-            type="text"
-            placeholder=""
-            value={formatCurrency(salesData.total_profit)}
-            onChange={handleNoOpChange}
-            readOnly
-          />
-          <InputForm
-            label="Omzet Produk"
-            name="amount"
+            label="Persentase Profit dari Layanan"
+            name="profit_percentage"
             type="text"
             placeholder="(opsional)"
-            value={formatCurrency(salesData.sub_total)}
+            value={formatPercentage(salesData.profit_percentage)}
             onChange={handleNoOpChange}
             readOnly
           />
@@ -176,6 +179,7 @@ const DetailSalesModal = ({ isOpen, onClose, sales_id }) => {
             placeholder="(opsional)"
             value={formatPercentage(salesData.profit_contribution_percentage)}
             onChange={handleNoOpChange}
+            helperText="kontribusi keuntungan untuk bulan terpilih"
             readOnly
           />
         </>

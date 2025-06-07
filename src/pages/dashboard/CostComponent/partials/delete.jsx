@@ -14,7 +14,7 @@ const DeleteComponentModal = ({ isOpen, onClose, id, onDeleted }) => {
     if (!id) return;
     try {
       setIsLoading(true);
-      await axios.delete(`${apiBaseUrl}/v1/cost-components/${id}`, {
+      await axios.delete(`${apiBaseUrl}/api/cost-components/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

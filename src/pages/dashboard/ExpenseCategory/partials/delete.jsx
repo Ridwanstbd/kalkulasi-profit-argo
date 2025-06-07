@@ -14,11 +14,14 @@ const DeleteCategoryModal = ({ isOpen, onClose, category_id, onDeleted }) => {
     if (!category_id) return;
     try {
       setIsLoading(true);
-      await axios.delete(`${apiBaseUrl}/v1/expense-categories/${category_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(
+        `${apiBaseUrl}/api/expense-categories/${category_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (typeof onDeleted === "function") {
         onDeleted(category_id);
       }

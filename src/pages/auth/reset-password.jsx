@@ -35,7 +35,7 @@ const ResetPassword = () => {
     const email = params.get("email");
 
     if (!token || !email) {
-      navigate("/auth/forgot-password", {
+      navigate("/forgot-password", {
         state: {
           message:
             "Mohon mengakses halaman ini dengan link yang diberikan melalui email.",
@@ -72,7 +72,7 @@ const ResetPassword = () => {
     setErrors({});
 
     try {
-      const response = await fetch(`${apiBaseUrl}/v1/reset-password`, {
+      const response = await fetch(`${apiBaseUrl}/api/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -169,6 +169,7 @@ const ResetPassword = () => {
           value={formData.password}
           onChange={handleChange}
           error={errors.password}
+          color="text-white"
           required
         />
         <InputForm
@@ -179,6 +180,7 @@ const ResetPassword = () => {
           value={formData.password_confirmation}
           onChange={handleChange}
           error={errors.password_confirmation}
+          color="text-white"
           required
         />
         <Button

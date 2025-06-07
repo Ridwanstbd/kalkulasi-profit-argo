@@ -18,7 +18,7 @@ import {
   Blocks,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Dropdown from "../Elements/Dropdown";
 import Button from "../Elements/Button";
 
@@ -30,6 +30,7 @@ const Sidebar = ({ title, description, children }) => {
   const auth = useAuth();
   const { logout: authLogout } = auth || {};
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -101,6 +102,14 @@ const Sidebar = ({ title, description, children }) => {
     return `${hours}:${minutes}`;
   };
 
+  const isActivePath = (path) => {
+    return location.pathname === path;
+  };
+
+  const hasActiveSubmenu = (submenu) => {
+    return submenu && submenu.some((item) => location.pathname === item.link);
+  };
+
   const commonMenuItems = [
     {
       title: "Dashboard",
@@ -108,9 +117,9 @@ const Sidebar = ({ title, description, children }) => {
       link: "/dashboard",
     },
     {
-      title: "Kalkulasi HPP",
+      title: "Kalkulasi Biaya Layanan",
       icon: <FlaskConical />,
-      link: "/dashboard/hpp",
+      link: "/dashboard/service-cost",
     },
     {
       title: "Skema Harga Retail",
@@ -128,11 +137,12 @@ const Sidebar = ({ title, description, children }) => {
       link: "/dashboard/sales-recap",
     },
   ];
+
   const masterDataMenuItems = [
     {
-      title: "Daftar Produk",
+      title: "Daftar Layanan",
       icon: <Package />,
-      link: "/dashboard/products",
+      link: "/dashboard/services",
     },
     {
       title: "Kategori Biaya Tetap",
@@ -232,7 +242,6 @@ const Sidebar = ({ title, description, children }) => {
                 (category, categoryIndex) =>
                   category.items.length > 0 && (
                     <div key={categoryIndex} className="mb-6">
-                      {/* Category Title */}
                       {!isCollapsed && (
                         <div className="px-2 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
                           {category.category}
@@ -243,80 +252,122 @@ const Sidebar = ({ title, description, children }) => {
                       )}
 
                       <ul className="space-y-2">
-                        {category.items.map((item, index) => (
-                          <li key={index} className="relative">
-                            {item.submenu ? (
-                              <div className="space-y-2">
-                                <button
-                                  onClick={() =>
-                                    toggleSubmenu(`${categoryIndex}-${index}`)
-                                  }
-                                  className="w-full flex items-center justify-between p-2 rounded-md hover:bg-gray-700 transition-colors"
-                                >
-                                  <div className="flex items-center">
-                                    {item.icon && (
-                                      <span
-                                        className={isCollapsed ? "" : "mr-3"}
-                                      >
-                                        {item.icon}
-                                      </span>
-                                    )}
-                                    {!isCollapsed && <span>{item.title}</span>}
-                                  </div>
-                                  {!isCollapsed && (
-                                    <ChevronDown
-                                      size={16}
-                                      className={`transition-transform ${
-                                        activeMenu ===
-                                        `${categoryIndex}-${index}`
-                                          ? "rotate-180"
-                                          : ""
-                                      }`}
-                                    />
-                                  )}
-                                </button>
+                        {category.items.map((item, index) => {
+                          const isActive = isActivePath(item.link);
+                          const hasActiveSubitem = hasActiveSubmenu(
+                            item.submenu
+                          );
+                          const isSubmenuOpen =
+                            activeMenu === `${categoryIndex}-${index}`;
 
-                                {!isCollapsed && (
-                                  <ul
-                                    className={`ml-6 space-y-1 transition-all duration-200 ease-in-out overflow-hidden
-                                        ${
-                                          activeMenu ===
-                                          `${categoryIndex}-${index}`
-                                            ? "max-h-96"
-                                            : "max-h-0"
-                                        }`}
+                          return (
+                            <li key={index} className="relative">
+                              {item.submenu ? (
+                                <div className="space-y-2">
+                                  <button
+                                    onClick={() =>
+                                      toggleSubmenu(`${categoryIndex}-${index}`)
+                                    }
+                                    className={`w-full flex items-center justify-between p-2 rounded-md transition-all duration-200 ${
+                                      hasActiveSubitem || isSubmenuOpen
+                                        ? "bg-blue-600 text-white shadow-md"
+                                        : "hover:bg-gray-700 text-gray-300 hover:text-white"
+                                    }`}
                                   >
-                                    {item.submenu.map((subItem, subIndex) => (
-                                      <li key={subIndex}>
-                                        <a
-                                          href={subItem.link}
-                                          className="block p-2 rounded-md hover:bg-gray-700 transition-colors text-gray-300 hover:text-white"
+                                    <div className="flex items-center">
+                                      {item.icon && (
+                                        <span
+                                          className={`${
+                                            isCollapsed ? "" : "mr-3"
+                                          } ${
+                                            hasActiveSubitem || isSubmenuOpen
+                                              ? "text-white"
+                                              : ""
+                                          }`}
                                         >
-                                          {subItem.title}
-                                        </a>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
-                              </div>
-                            ) : (
-                              <Link
-                                to={item.link}
-                                className={`flex items-center p-2 rounded-md hover:bg-gray-700 transition-colors ${
-                                  isCollapsed ? "justify-center" : ""
-                                }`}
-                                title={isCollapsed ? item.title : ""}
-                              >
-                                {item.icon && (
-                                  <span className={isCollapsed ? "" : "mr-3"}>
-                                    {item.icon}
-                                  </span>
-                                )}
-                                {!isCollapsed && <span>{item.title}</span>}
-                              </Link>
-                            )}
-                          </li>
-                        ))}
+                                          {item.icon}
+                                        </span>
+                                      )}
+                                      {!isCollapsed && (
+                                        <span>{item.title}</span>
+                                      )}
+                                    </div>
+                                    {!isCollapsed && (
+                                      <ChevronDown
+                                        size={16}
+                                        className={`transition-transform duration-200 ${
+                                          isSubmenuOpen ? "rotate-180" : ""
+                                        } ${
+                                          hasActiveSubitem || isSubmenuOpen
+                                            ? "text-white"
+                                            : ""
+                                        }`}
+                                      />
+                                    )}
+                                  </button>
+
+                                  {!isCollapsed && (
+                                    <ul
+                                      className={`ml-6 space-y-1 transition-all duration-200 ease-in-out overflow-hidden
+                                          ${
+                                            isSubmenuOpen
+                                              ? "max-h-96"
+                                              : "max-h-0"
+                                          }`}
+                                    >
+                                      {item.submenu.map((subItem, subIndex) => {
+                                        const isSubActive = isActivePath(
+                                          subItem.link
+                                        );
+                                        return (
+                                          <li key={subIndex}>
+                                            <a
+                                              href={subItem.link}
+                                              className={`block p-2 rounded-md transition-all duration-200 ${
+                                                isSubActive
+                                                  ? "bg-blue-500 text-white font-medium shadow-sm border-l-4 border-blue-300"
+                                                  : "text-gray-300 hover:text-white hover:bg-gray-700"
+                                              }`}
+                                            >
+                                              {subItem.title}
+                                            </a>
+                                          </li>
+                                        );
+                                      })}
+                                    </ul>
+                                  )}
+                                </div>
+                              ) : (
+                                <Link
+                                  to={item.link}
+                                  className={`flex items-center p-2 rounded-md transition-all duration-200 relative ${
+                                    isCollapsed ? "justify-center" : ""
+                                  } ${
+                                    isActive
+                                      ? "bg-blue-600 text-white font-medium shadow-md border-l-4 border-blue-300"
+                                      : "text-gray-300 hover:text-white hover:bg-gray-700"
+                                  }`}
+                                  title={isCollapsed ? item.title : ""}
+                                >
+                                  {item.icon && (
+                                    <span
+                                      className={`${
+                                        isCollapsed ? "" : "mr-3"
+                                      } ${isActive ? "text-white" : ""}`}
+                                    >
+                                      {item.icon}
+                                    </span>
+                                  )}
+                                  {!isCollapsed && <span>{item.title}</span>}
+                                  {/* Active indicator dot for collapsed sidebar */}
+                                  {isCollapsed && isActive && (
+                                    <div className="absolute -right-1 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-400 rounded-full"></div>
+                                  )}
+                                </Link>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   )

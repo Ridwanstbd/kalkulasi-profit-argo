@@ -15,7 +15,7 @@ const DeleteSalesModal = ({ isOpen, onClose, sales_id, onDeleted }) => {
     try {
       setIsLoading(true);
 
-      await axios.delete(`${apiBaseUrl}/v1/sales/${sales_id}`, {
+      await axios.delete(`${apiBaseUrl}/api/sales/${sales_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

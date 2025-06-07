@@ -19,7 +19,7 @@ const DetailExpenseModal = ({ isOpen, onClose, expense_id }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${apiBaseUrl}/v1/operational-expenses/${expense_id}`,
+          `${apiBaseUrl}/api/operational-expenses/${expense_id}`,
           {
             headers: {
               "Content-Type": "application/json",

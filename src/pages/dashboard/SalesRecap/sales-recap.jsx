@@ -74,7 +74,7 @@ const SalesRecap = () => {
     const fetchData = async (year = null, month = null) => {
       try {
         setLoading(true);
-        let url = `${apiBaseUrl}/v1/sales`;
+        let url = `${apiBaseUrl}/api/sales`;
 
         const params = new URLSearchParams();
         if (year) params.append("year", year);
@@ -199,14 +199,21 @@ const SalesRecap = () => {
       sortable: false,
     },
     {
-      accessor: "product_name",
-      name: "Nama Produk",
+      accessor: "name",
+      name: "Nama Klien",
       sortable: true,
       filterable: true,
     },
     {
-      accessor: "number_of_sales",
-      name: "Total Terjual",
+      accessor: "service_name",
+      name: "Nama Layanan",
+      sortable: true,
+      filterable: true,
+      cell: (row) => `${row.service_name} - ${row.service_sku}`,
+    },
+    {
+      accessor: "date",
+      name: "Tanggal",
       sortable: true,
       filterable: true,
     },
