@@ -16,26 +16,20 @@ const Select2 = ({
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  // Filter options based on search term
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Handle selecting an option
   const handleSelect = (option) => {
     if (isMulti) {
-      // Check if already selected
       const isSelected = value.some((item) => item.value === option.value);
 
       if (isSelected) {
-        // Remove from selection
         onChange(value.filter((item) => item.value !== option.value));
       } else {
-        // Add to selection
         onChange([...value, option]);
       }
     } else {
-      // Single select behavior
       onChange([option]);
       setIsOpen(false);
     }
@@ -45,13 +39,11 @@ const Select2 = ({
     }
   };
 
-  // Remove a selected option (for multi-select)
   const removeOption = (optionToRemove, e) => {
     e.stopPropagation();
     onChange(value.filter((option) => option.value !== optionToRemove.value));
   };
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -65,20 +57,18 @@ const Select2 = ({
     };
   }, []);
 
-  // Focus search input when dropdown opens
   useEffect(() => {
     if (isOpen && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [isOpen]);
 
-  // Check if an option is selected
   const isOptionSelected = (option) => {
     return value.some((item) => item.value === option.value);
   };
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div className={`relative z-10 ${className}`} ref={dropdownRef}>
       {/* Main select box */}
       <div
         className="flex min-h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none cursor-pointer"

@@ -74,7 +74,7 @@ const CreateExpense = ({ isOpen, onClose }) => {
     { value: "", label: "Pilih Unit" },
     { value: "orang", label: "Orang" },
     { value: "minggu", label: "Minggu" },
-    { value: "bulan", label: "bulan" },
+    { value: "bulan", label: "Bulan" },
   ];
 
   const generateYearOptions = () => {
