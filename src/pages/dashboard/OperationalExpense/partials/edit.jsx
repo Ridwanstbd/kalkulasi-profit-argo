@@ -155,7 +155,7 @@ const EditExpenseModal = ({ isOpen, onClose, expense_id }) => {
     { value: "", label: "Pilih Unit" },
     { value: "orang", label: "Orang" },
     { value: "minggu", label: "Minggu" },
-    { value: "set", label: "Set" },
+    { value: "bulan", label: "Bulan" },
   ];
 
   const currentYear = new Date().getFullYear();
