@@ -75,9 +75,9 @@ const CreateExpense = ({ isOpen, onClose }) => {
     { value: "orang", label: "Orang" },
     { value: "minggu", label: "Minggu" },
     { value: "bulan", label: "Bulan" },
-    { value: "4 bulan", label: "Bulan" },
-    { value: "6 bulan", label: "Bulan" },
-    { value: "8 bulan", label: "Bulan" },
+    { value: "4 bulan", label: "4 Bulan" },
+    { value: "6 bulan", label: "6 Bulan" },
+    { value: "8 bulan", label: "8 Bulan" },
     { value: "tahun", label: "Tahun" },
   ];
 
