@@ -130,6 +130,7 @@ const EditServiceCostModal = ({ isOpen, onClose, service_cost_id }) => {
     { value: "cm", label: "cm" },
     { value: "pcs", label: "pcs" },
     { value: "set", label: "set" },
+    { value: "org", label: "orang" },
     { value: "ml", label: "ml" },
     { value: "gram", label: "gram" },
     { value: "kg", label: "kg" },
