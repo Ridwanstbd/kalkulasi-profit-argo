@@ -197,6 +197,7 @@ const CreateServiceCostModal = ({
     { value: "cm", label: "cm" },
     { value: "pcs", label: "pcs" },
     { value: "set", label: "set" },
+    { value: "org", label: "orang" },
     { value: "ml", label: "ml" },
     { value: "gram", label: "gram" },
     { value: "kg", label: "kg" },

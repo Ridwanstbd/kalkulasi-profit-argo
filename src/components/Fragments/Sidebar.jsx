@@ -122,7 +122,7 @@ const Sidebar = ({ title, description, children }) => {
       link: "/dashboard/service-cost",
     },
     {
-      title: "Skema Harga Retail",
+      title: "Smart Pricing",
       icon: <DollarSign />,
       link: "/dashboard/pricing",
     },

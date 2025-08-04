@@ -34,11 +34,12 @@ const Pricing = () => {
     service: [],
   });
   const [serviceCost, setServiceCost] = useState("-");
+  const [servicePrice, setServicePrice] = useState("-");
 
   const pageInfo = {
-    title: "Skema Harga Saya",
+    title: "Smart Pricing",
     description:
-      "Halaman ini untuk mengelola Skema Harga yang kamu butuhkan untuk membagi Margin Layanan kamu ke Produsen, sampai affiliator. kamu bisa mulai dari membuat skema mengubah dan menghapus",
+      "Manajemen harga layanan agar lebih efisien dan menguntungkan.",
   };
   useDocumentHead(pageInfo);
 
@@ -99,19 +100,23 @@ const Pricing = () => {
 
         if (serviceResponse.data?.data) {
           setServiceCost(serviceResponse.data.data.hpp || "-");
+          setServicePrice(serviceResponse.data.data.selling_price || "-");
         } else {
           setServiceCost("-");
+          setServicePrice("-");
         }
       } catch (error) {
         console.error("Error fetching service HPP:", error);
         showAlert("Gagal memuat ulang data Layanan", "error");
         setServiceCost("-");
+        setServicePrice("-");
       } finally {
         setLoading(false);
       }
     } else {
       setData(data);
       setServiceCost("-");
+      setServicePrice("-");
     }
   };
 
@@ -170,6 +175,9 @@ const Pricing = () => {
 
             if (response.data.service.hpp) {
               setServiceCost(response.data.service.hpp);
+            }
+            if (response.data.service.selling_price) {
+              setServicePrice(response.data.service.selling_price);
             }
           }
         }
@@ -265,6 +273,16 @@ const Pricing = () => {
           options={options.service}
           placeholder="Pilih Layanan"
         />
+
+        <div>
+          <Label htmlFor="hpp">Harga Jual Layanan</Label>
+          <h3 className="font-bold text-xl">
+            {servicePrice !== "-"
+              ? `Rp ${parseFloat(servicePrice).toLocaleString("id-ID")}`
+              : "-"}
+          </h3>
+        </div>
+
         <div>
           <Label htmlFor="hpp">HPP</Label>
           <h3 className="font-bold text-xl">
@@ -273,6 +291,7 @@ const Pricing = () => {
               : "-"}
           </h3>
         </div>
+
         <div>
           <Label htmlFor="add">Aksi</Label>
           <Button
