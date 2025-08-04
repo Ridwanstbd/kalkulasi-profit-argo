@@ -39,7 +39,7 @@ const Pricing = () => {
   const pageInfo = {
     title: "Smart Pricing",
     description:
-      "Manajemen harga layanan agar lebih efisien dan menguntungkan.",
+      "Solusi cerdas dalam pengelolaan skema harga layanan berbasis data, untuk mendukung keputusan bisnis yang lebih cepat dan presisi.",
   };
   useDocumentHead(pageInfo);
 
