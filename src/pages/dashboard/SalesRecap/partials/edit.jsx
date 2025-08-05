@@ -143,17 +143,6 @@ const EditSalesModal = ({ isOpen, onClose, sales_id }) => {
       ) : (
         <>
           <InputForm
-            label="Terjual"
-            name="number_of_sales"
-            type="number"
-            placeholder="100"
-            value={formData.number_of_sales}
-            onChange={handleChange}
-            error={errors.number_of_sales}
-            helperText="Jumlah Satuan Produk per bulan yang terjual"
-            required
-          />
-          <InputForm
             label="HPP Terjual"
             name="hpp"
             type="number"
